@@ -1,0 +1,26 @@
+name:  AnimalShop
+version:  0.2
+description:  Player can trade items
+author:  ibhh
+website: http://www.ibhh.de/AnimalShop
+
+main: me.ibhh.AnimalShop.AnimalShop
+
+commands:
+  AnimalShop:
+    description: 
+    usage: /AnimalShop
+permissions:
+  AnimalShop.*:
+    description: Gives access to all xpShop commands
+    children:
+      AnimalShop.create: false
+      AnimalShop.use: false
+    description: Creates a new Shop.
+    default: false
+  AnimalShop.create:
+    description: Allows you to create an AnimalShop.
+    default: false
+  AnimalShop.use:
+    description: Allows you to use an AnimalShop.
+    default: false

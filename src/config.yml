@@ -1,0 +1,18 @@
+language: en
+autodownload: true
+Sheep: Sheep
+Cow: Cow
+Chicken: Chicken
+Pig: Pig
+permissions:
+  error:
+    de: Houston Wir haben ein Problem! Diesen Befehl darfst Du nicht verwenden!
+    en: Houston we have a problem! You can't use this command!
+  notfound:
+    de: PermissionsEx plugin nicht gefunden!
+    en: PermissionsEx not found!
+permissionserror: Houston we have a problem! You can't use this command!
+iConomy:
+  error:
+    de: Kein iConomy5 oder 6 oder Register gefunden!
+    en: No iConomy5 or 6 or Register found!
