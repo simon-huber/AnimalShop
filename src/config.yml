@@ -1,9 +1,17 @@
 language: en
 autodownload: true
-Sheep: Sheep
-Cow: Cow
-Chicken: Chicken
-Pig: Pig
+Sheep:
+  de: Schaf
+  en: Sheep
+Cow:
+  de: Kuh
+  en: Cow
+Chicken:
+  de: Huhn
+  en: Chicken
+Pig:
+  de: Schwein
+  en: Pig
 permissions:
   error:
     de: Houston Wir haben ein Problem! Diesen Befehl darfst Du nicht verwenden!

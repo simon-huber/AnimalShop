@@ -150,19 +150,19 @@ public class AnimalShop extends JavaPlugin
 
 	public void spawnAnimal(Player p, String Animal)
 	{
-		if (Animal.equals(getConfig().get("Sheep")))
+		if (Animal.equals(getConfig().get("Sheep." + getConfig().getString("language"))))
 		{
 			p.getWorld().spawnCreature(p.getLocation(), CreatureType.SHEEP);
 		}
-		else if (Animal.equals(getConfig().get("Cow")))
+		else if (Animal.equals(getConfig().get("Cow." + getConfig().getString("language"))))
 		{
 			p.getWorld().spawnCreature(p.getLocation(), CreatureType.COW);
 		}
-		else if (Animal.equals(getConfig().get("Chicken")))
+		else if (Animal.equals(getConfig().get("Chicken." + getConfig().getString("language"))))
 		{
 			p.getWorld().spawnCreature(p.getLocation(), CreatureType.CHICKEN);
 		}
-		else if (Animal.equals(getConfig().get("Pig")))
+		else if (Animal.equals(getConfig().get("Pig." + getConfig().getString("language"))))
 		{
 			p.getWorld().spawnCreature(p.getLocation(), CreatureType.PIG);
 		}
@@ -176,8 +176,20 @@ public class AnimalShop extends JavaPlugin
 	{
 		if ((sender instanceof Player))
 		{
+			Player player = (Player) sender;
 			if (cmd.getName().equalsIgnoreCase("AnimalShop"))
 			{
+				if(args.length == 1)
+				{
+					if(args[0].equalsIgnoreCase("list"))
+					{
+						player.sendMessage(ChatColor.DARK_BLUE + "[AnimalShop]" + ChatColor.GOLD + "List:");
+						player.sendMessage(ChatColor.DARK_BLUE + "[AnimalShop]" + ChatColor.GOLD + getConfig().get("Sheep." + getConfig().getString("language")));
+						player.sendMessage(ChatColor.DARK_BLUE + "[AnimalShop]" + ChatColor.GOLD + getConfig().get("Cow." + getConfig().getString("language")));
+						player.sendMessage(ChatColor.DARK_BLUE + "[AnimalShop]" + ChatColor.GOLD + getConfig().get("Chicken." + getConfig().getString("language")));
+						player.sendMessage(ChatColor.DARK_BLUE + "[AnimalShop]" + ChatColor.GOLD + getConfig().get("Pig." + getConfig().getString("language")));
+					}
+				}
 				return false;
 			}
 		}
