@@ -9,62 +9,59 @@ import org.bukkit.event.player.PlayerListener;
 
 public class ShopPlayerListener extends PlayerListener
 {
-	private final AnimalShop plugin;
-	private PermissionsHandler Permissions;
-	private iConomyHandler iConomy;
-	double doubeline;
+  private final AnimalShop plugin;
+  private PermissionsHandler Permissions;
+  private iConomyHandler iConomy;
+  double doubeline;
 
-	public ShopPlayerListener(AnimalShop plugin)
-	{
-		this.plugin = plugin;
-		Permissions = new PermissionsHandler(plugin);
-		iConomy = new iConomyHandler(plugin);
-	}
+  public ShopPlayerListener(AnimalShop plugin)
+  {
+    this.plugin = plugin;
+    this.Permissions = new PermissionsHandler(plugin);
+    this.iConomy = new iConomyHandler(plugin);
+  }
 
-	public void onPlayerInteract(PlayerInteractEvent event)
-	{
-		Player p = event.getPlayer();
-		if ((event.hasBlock()) && ((event.getClickedBlock().getState() instanceof Sign)) && (event.getAction() == Action.LEFT_CLICK_BLOCK)) {
-			Sign s = (Sign)event.getClickedBlock().getState();
-			if (this.plugin.blockIsValid(s))
-			{
-				if(Permissions.checkpermissions(p, "use"))
-				{
-					double price = getPrice(s, 1, p);
-					String Animal = getType(s, 2);
-					if ((iConomy.getBalance156(p) - price) >= 0) 
-					{
-						System.out.println("Buy");
-						iConomy.substractmoney156(price, p);
-						plugin.spawnAnimal(p, Animal);
-					}
-					else
-					{
-						p.sendMessage(ChatColor.DARK_BLUE + "[AnimalShop]" + ChatColor.GOLD + "You havent enough money!");
-					}
-				}
-			}
-		}
-	}
+  public void onPlayerInteract(PlayerInteractEvent event)
+  {
+    Player p = event.getPlayer();
+    if ((event.hasBlock()) && ((event.getClickedBlock().getState() instanceof Sign)) && (event.getAction() == Action.LEFT_CLICK_BLOCK) && !(event.getPlayer().isSneaking())) {
+      Sign s = (Sign)event.getClickedBlock().getState();
+      if (this.plugin.blockIsValid(s))
+      {
+        if (this.Permissions.checkpermissions(p, "use"))
+        {
+          double price = getPrice(s, 1, p);
+          String Animal = getType(s, 2);
+          if (this.iConomy.getBalance156(p).doubleValue() - price >= 0.0D)
+          {
+            this.iConomy.substractmoney156(price, p);
+            this.plugin.spawnAnimal(p, Animal);
+          }
+          else
+          {
+            p.sendMessage(ChatColor.DARK_BLUE + "[AnimalShop]" + ChatColor.GOLD + "You havent enough money!");
+          }
+        }
+      }
+    }
+  }
 
+  private double getPrice(Sign s, int l, Player p)
+  {
+    String line = s.getLine(l);
+    try
+    {
+      this.doubeline = Double.parseDouble(line);
+    }
+    catch (Exception e) {
+      e.printStackTrace();
+    }
+    return this.doubeline;
+  }
 
-
-	private double getPrice(Sign s, int l, Player p) 
-	{
-		String line = s.getLine(l);
-		try 
-		{
-			doubeline = Double.parseDouble(line);
-		}
-		catch (Exception e) {
-			e.printStackTrace();
-		}
-		return doubeline;
-	}
-
-	private String getType(Sign s, int l)
-	{
-		String line = s.getLine(l);
-		return line;
-	}
+  private String getType(Sign s, int l)
+  {
+    String line = s.getLine(l);
+    return line;
+  }
 }
