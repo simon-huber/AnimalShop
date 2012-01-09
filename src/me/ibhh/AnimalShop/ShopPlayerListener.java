@@ -21,6 +21,7 @@ public class ShopPlayerListener extends PlayerListener
     this.iConomy = new iConomyHandler(plugin);
   }
 
+    @Override
   public void onPlayerInteract(PlayerInteractEvent event)
   {
     Player p = event.getPlayer();
