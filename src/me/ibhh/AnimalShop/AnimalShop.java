@@ -172,6 +172,7 @@ public class AnimalShop extends JavaPlugin
 		return !(sender instanceof Player);
 	}
 
+    @Override
 	public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args)
 	{
 		if ((sender instanceof Player))

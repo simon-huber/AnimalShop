@@ -3,6 +3,7 @@ version:  0.5
 description:  Player can trade items
 author:  ibhh
 website: http://www.ibhh.de/AnimalShop
+softdepend: [Vault]
 
 main: me.ibhh.AnimalShop.AnimalShop
 
