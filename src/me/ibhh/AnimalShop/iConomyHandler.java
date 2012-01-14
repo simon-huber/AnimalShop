@@ -36,13 +36,17 @@ public class iConomyHandler {
         }
         return false;
     }
-
-    private Boolean setupEconomy() {
+        private Boolean setupEconomy() {
+            try{
         RegisteredServiceProvider<Economy> economyProvider = AnimalShopV.getServer().getServicesManager().getRegistration(net.milkbowl.vault.economy.Economy.class);
         if (economyProvider != null) {
             economy = economyProvider.getProvider();
         }
-
+            }
+            catch(NoClassDefFoundError e)
+            {
+                return false;
+            }
         return (economy != null);
     }
 
