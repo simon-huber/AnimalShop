@@ -6,6 +6,7 @@ import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.CreatureType;
 import org.bukkit.entity.Player;
+import org.bukkit.entity.Wolf;
 import org.bukkit.event.Event;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -111,11 +112,11 @@ public class AnimalShop extends JavaPlugin
 
 	private void registerEvents()
 	{
-	    PluginManager pm = getServer().getPluginManager();
-	    pm.registerEvent(Event.Type.SIGN_CHANGE, this.blockListener, Event.Priority.Normal, this);
-	    pm.registerEvent(Event.Type.PLAYER_INTERACT, this.playerListener, Event.Priority.Normal, this);
-	    pm.registerEvent(Event.Type.BLOCK_BREAK, this.blockListener, Event.Priority.Normal, this);
-	    pm.registerEvent(Event.Type.BLOCK_PLACE, this.blockListener, Event.Priority.Normal, this);
+	    PluginManager pm1 = getServer().getPluginManager();
+	    pm1.registerEvent(Event.Type.SIGN_CHANGE, this.blockListener, Event.Priority.Normal, this);
+	    pm1.registerEvent(Event.Type.PLAYER_INTERACT, this.playerListener, Event.Priority.Normal, this);
+	    pm1.registerEvent(Event.Type.BLOCK_BREAK, this.blockListener, Event.Priority.Normal, this);
+	    pm1.registerEvent(Event.Type.BLOCK_PLACE, this.blockListener, Event.Priority.Normal, this);
 		System.out
 		.println("[AnimalShop] Events registered!");
 	}
@@ -166,6 +167,21 @@ public class AnimalShop extends JavaPlugin
 		{
 			p.getWorld().spawnCreature(p.getLocation(), CreatureType.PIG);
 		}
+                else if (Animal.equals(getConfig().get("MushroomCow." + getConfig().getString("language"))))
+		{
+			p.getWorld().spawnCreature(p.getLocation(), CreatureType.MUSHROOM_COW);
+                }
+                else if (Animal.equals(getConfig().get("Villager." + getConfig().getString("language"))))
+		{
+			p.getWorld().spawnCreature(p.getLocation(), CreatureType.VILLAGER);
+		}
+                else if (Animal.equals(getConfig().get("Villager." + getConfig().getString("language"))))
+		{
+			Wolf w = (Wolf)p.getWorld().spawnCreature(p.getLocation(), CreatureType.WOLF);
+                        w.setHealth(20);
+                        w.setOwner(p);
+                        w.setSitting(false);
+		}
 		p.sendMessage(ChatColor.DARK_BLUE + "[AnimalShop]" + ChatColor.GOLD + "Woah! A " + Animal + "! You should befriend it!");
 	}
 	protected static boolean isConsole(CommandSender sender) {
@@ -189,6 +205,9 @@ public class AnimalShop extends JavaPlugin
 						player.sendMessage(ChatColor.DARK_BLUE + "[AnimalShop]" + ChatColor.GOLD + getConfig().get("Cow." + getConfig().getString("language")));
 						player.sendMessage(ChatColor.DARK_BLUE + "[AnimalShop]" + ChatColor.GOLD + getConfig().get("Chicken." + getConfig().getString("language")));
 						player.sendMessage(ChatColor.DARK_BLUE + "[AnimalShop]" + ChatColor.GOLD + getConfig().get("Pig." + getConfig().getString("language")));
+                                                player.sendMessage(ChatColor.DARK_BLUE + "[AnimalShop]" + ChatColor.GOLD + getConfig().get("MushroomCow." + getConfig().getString("language")));
+                                                player.sendMessage(ChatColor.DARK_BLUE + "[AnimalShop]" + ChatColor.GOLD + getConfig().get("Villager." + getConfig().getString("language")));
+                                                player.sendMessage(ChatColor.DARK_BLUE + "[AnimalShop]" + ChatColor.GOLD + getConfig().get("Wolf." + getConfig().getString("language")));
 					}
 				}
 				return false;

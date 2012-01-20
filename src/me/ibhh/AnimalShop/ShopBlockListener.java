@@ -19,6 +19,7 @@ public class ShopBlockListener extends BlockListener
     this.Permissions = new PermissionsHandler(plugin);
   }
 
+    @Override
   public void onSignChange(SignChangeEvent event)
   {
     Player p = event.getPlayer();
@@ -26,7 +27,7 @@ public class ShopBlockListener extends BlockListener
     if (event.getLine(0).equalsIgnoreCase("[AnimalShop]"))
       try
       {
-        boolean secondLineValid = false;
+        boolean secondLineValid;
         if (Tools.isInteger(event.getLine(1)))
           secondLineValid = true;
         else
@@ -52,7 +53,6 @@ public class ShopBlockListener extends BlockListener
           event.getPlayer().sendMessage(ChatColor.DARK_BLUE + "[AnimalShop]" + ChatColor.GOLD + "AnimalShop creation failed!");
           event.setLine(1, ChatColor.DARK_BLUE + event.getLine(1));
           event.setCancelled(true);
-          return;
         }
       }
       catch (Exception e)
@@ -63,6 +63,7 @@ public class ShopBlockListener extends BlockListener
       }
   }
 
+    @Override
   public void onBlockPlace(BlockPlaceEvent event)
   {
     if ((event.getBlock() instanceof Sign)) {
@@ -71,7 +72,7 @@ public class ShopBlockListener extends BlockListener
       Player p = event.getPlayer();
       if (sign.getLine(0).equalsIgnoreCase("[AnimalShop]"))
       {
-        boolean secondLineValid = false;
+        boolean secondLineValid;
         if (Tools.isInteger(sign.getLine(1)))
           secondLineValid = true;
         else {
@@ -97,6 +98,7 @@ public class ShopBlockListener extends BlockListener
     }
   }
 
+    @Override
   public void onBlockBreak(BlockBreakEvent event)
   {
     if (!(event.getBlock().getState() instanceof Sign)) {

@@ -33,7 +33,7 @@ public class ShopPlayerListener extends PlayerListener
         {
           double price = getPrice(s, 1, p);
           String Animal = getType(s, 2);
-          if (this.iConomy.getBalance156(p).doubleValue() - price >= 0.0D)
+          if ((this.iConomy.getBalance156(p).doubleValue()) - price >= 0.00)
           {
             this.iConomy.substractmoney156(price, p);
             this.plugin.spawnAnimal(p, Animal);

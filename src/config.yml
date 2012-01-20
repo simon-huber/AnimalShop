@@ -12,6 +12,15 @@ Chicken:
 Pig:
   de: Schwein
   en: Pig
+MushroomCow:
+  de: Pilzkuh
+  en: MushroomCow
+Villager:
+  de: Dorfbewohner
+  en: Villager
+Wolf:
+  de: Wolf
+  en: wolf
 permissions:
   error:
     de: Houston Wir haben ein Problem! Diesen Befehl darfst Du nicht verwenden!
