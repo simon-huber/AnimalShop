@@ -28,7 +28,8 @@ public class ShopBlockListener extends BlockListener
       try
       {
         boolean secondLineValid;
-        if (Tools.isInteger(event.getLine(1)))
+        Sign s = (Sign)event.getBlock().getState();
+        if (plugin.blockIsValid(s, "create", p))
           secondLineValid = true;
         else
           secondLineValid = false;
@@ -101,12 +102,13 @@ public class ShopBlockListener extends BlockListener
     @Override
   public void onBlockBreak(BlockBreakEvent event)
   {
+      Player p = event.getPlayer();
     if (!(event.getBlock().getState() instanceof Sign)) {
       return;
     }
     Sign s = (Sign)event.getBlock().getState();
-    if (this.plugin.blockIsValid(s))
-      if (!this.Permissions.checkpermissions(event.getPlayer(), "create"))
+    if (this.plugin.blockIsValid(s, "break", p))
+      if (!this.Permissions.checkpermissions(p, "create"))
         event.setCancelled(true);
       else
         event.getPlayer().sendMessage(ChatColor.DARK_BLUE + "[AnimalShop]" + ChatColor.GOLD + "Destroying AnimalShop");

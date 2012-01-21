@@ -25,15 +25,15 @@ public class ShopPlayerListener extends PlayerListener
   public void onPlayerInteract(PlayerInteractEvent event)
   {
     Player p = event.getPlayer();
-    if ((event.hasBlock()) && ((event.getClickedBlock().getState() instanceof Sign)) && (event.getAction() == Action.LEFT_CLICK_BLOCK) && !(event.getPlayer().isSneaking())) {
+    if ((event.hasBlock()) && ((event.getClickedBlock().getState() instanceof Sign)) && (event.getAction() == Action.LEFT_CLICK_BLOCK) && (!p.isSneaking()) ) { // && !(p.isSneaking())
       Sign s = (Sign)event.getClickedBlock().getState();
-      if (this.plugin.blockIsValid(s))
+      if (this.plugin.blockIsValid(s, "Interact", p))
       {
         if (this.Permissions.checkpermissions(p, "use"))
         {
           double price = getPrice(s, 1, p);
           String Animal = getType(s, 2);
-          if ((this.iConomy.getBalance156(p).doubleValue()) - price >= 0.00)
+          if ((iConomy.getBalance156(p) - price) >= 0) 
           {
             this.iConomy.substractmoney156(price, p);
             this.plugin.spawnAnimal(p, Animal);

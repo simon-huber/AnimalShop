@@ -1,5 +1,6 @@
 language: en
 autodownload: true
+debug: false
 Sheep:
   de: Schaf
   en: Sheep
