@@ -1,88 +1,87 @@
 package me.ibhh.AnimalShop;
 
+import org.anjocaido.groupmanager.GroupManager;
+import org.anjocaido.groupmanager.permissions.AnjoPermissionsHandler;
 import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
+import org.bukkit.plugin.Plugin;
+import org.bukkit.plugin.PluginManager;
 import ru.tehkode.permissions.PermissionManager;
 import ru.tehkode.permissions.bukkit.PermissionsEx;
 
-public class PermissionsHandler
-{
-  private AnimalShop AnimalShopV;
-  String Error;
+public class PermissionsHandler {
 
-  public PermissionsHandler(AnimalShop AnimalSh)
-  {
-    this.AnimalShopV = AnimalSh;
-  }
+    private AnimalShop plugin;
+    private GroupManager groupManager;
 
-  public boolean checkpermissions(Player sender, String action)
-  {
-    if ((sender instanceof Player))
-    {
-      Player player = sender;
-      try {
-        this.Error = (ChatColor.DARK_BLUE + "[AnimalShop]" + ChatColor.GOLD + "Houston we have a problem! You can't use this command!");
-      }
-      catch (Exception e) {
-        e.printStackTrace();
-        sender.sendMessage("[AnimalShop] Error on checking permissions (Config)!");
-      }
-      if (!Bukkit.getServer().getPluginManager().isPluginEnabled("PermissionsEx")) {
-        try
-        {
-          if (player.hasPermission("AnimalShop." + action))
-          {
-            return true;
-          }
+    public PermissionsHandler(AnimalShop pl) {
+        this.plugin = pl;
+        final PluginManager pluginManager = plugin.getServer().getPluginManager();
+        final Plugin GMplugin = pluginManager.getPlugin("GroupManager");
+            if (GMplugin != null && GMplugin.isEnabled()) {
+                groupManager = (GroupManager) GMplugin;
 
-          player.sendMessage(this.Error);
-          return false;
-        }
-        catch (Exception e)
-        {
-          System.out.println("[AnimalShop] Error on checking permissions with BukkitPermissions!");
-
-          player.sendMessage("[AnimalShop] Error on checking permissions with BukkitPermissions!");
-
-          e.printStackTrace();
-          return false;
-        }
-
-      }
-
-      if (Bukkit.getServer().getPluginManager().isPluginEnabled("PermissionsEx"))
-      {
-        try
-        {
-          PermissionManager permissions = PermissionsEx.getPermissionManager();
-
-          if (permissions.has(player, "AnimalShop." + action))
-          {
-            return true;
-          }
-
-          player.sendMessage(this.Error);
-          return false;
-        }
-        catch (Exception e)
-        {
-          System.out.println("[AnimalShop] Error on checking permissions with PermissionsEx!");
-          player.sendMessage("[AnimalShop] Error on checking permissions with PermissionsEx!");
-          e.printStackTrace();
-          return false;
-        }
-
-      }
-
-      System.out
-        .println("PermissionsEx plugin are not found.");
-      return false;
+            }
     }
 
-    System.out.println("[AnimalShop] " + 
-      this.AnimalShopV.getConfig().getString(new StringBuilder("command.error.noplayer")
-      .append(this.AnimalShopV.getConfig().getString("language")).toString()));
-    return false;
-  }
+    public boolean checkpermissions(Player player, String action) {
+        if(player.isOp()){
+            return true;
+        }
+        if (!Bukkit.getServer().getPluginManager().isPluginEnabled("PermissionsEx") && !plugin.getServer().getPluginManager().isPluginEnabled("GroupManager")) {
+            try {
+                if (player.hasPermission(action)) {
+                    return true;
+                }
+
+                plugin.PlayerLogger(player, player.getDisplayName() + " " + plugin.getPermissionsError() + "(" + action + ")", "Error");
+                return false;
+            } catch (Exception e) {
+                plugin.Logger("Error on checking permissions with BukkitPermissions!", "Error");
+                plugin.PlayerLogger(player, "Error on checking permissions with BukkitPermissions!", "Error");
+                e.printStackTrace();
+                return false;
+            }
+
+        }
+
+        if (Bukkit.getServer().getPluginManager().isPluginEnabled("PermissionsEx")) {
+            try {
+                PermissionManager permissions = PermissionsEx.getPermissionManager();
+
+                if (permissions.has(player, action)) {
+                    return true;
+                }
+                plugin.PlayerLogger(player, player.getDisplayName() + " " + plugin.getPermissionsError() + "(" + action + ")", "Error");
+                return false;
+            } catch (Exception e) {
+                plugin.Logger("Error on checking permissions with PermissionsEX!", "Error");
+                plugin.PlayerLogger(player, "Error on checking permissions with PermissionsEX!", "Error");
+                e.printStackTrace();
+                return false;
+            }
+
+        } else if (plugin.getServer().getPluginManager().isPluginEnabled("GroupManager")) {
+            try {
+                final AnjoPermissionsHandler handler = groupManager.getWorldsHolder().getWorldPermissions(player);
+                {
+                    if (handler == null) {
+                        if (handler.has(player, action)) {
+                            return true;
+                        } else {
+                            plugin.PlayerLogger(player, player.getDisplayName() + " " + plugin.getPermissionsError() + "(" + action + ")", "Error");
+                            return false;
+                        }
+                    }
+                }
+            } catch (Exception e) {
+                plugin.Logger("Error on checking permissions with GroupManager!", "Error");
+                plugin.PlayerLogger(player, "Error on checking permissions with GroupManager!", "Error");
+                e.printStackTrace();
+                return false;
+            }
+        }
+        System.out.println("PermissionsEx plugin are not found.");
+        return false;
+    }
 }
