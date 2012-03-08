@@ -32,7 +32,7 @@ public class ShopPlayerListener implements Listener {
             Sign s = (Sign) event.getClickedBlock().getState();
             String[] line = s.getLines();
             if (this.plugin.blockIsValid(line, p)) {
-                if (this.Permissions.checkpermissions(p, "use")) {
+                if (this.Permissions.checkpermissions(p, "AnimalShop.use")) {
                     double price = getPrice(s, 1, p);
                     String Animal = getType(s, 2);
                     if ((iConomy.getBalance156(p) - price) >= 0) {
@@ -69,7 +69,7 @@ public class ShopPlayerListener implements Listener {
             try {
                 String[] line = event.getLines();
                 if (plugin.blockIsValid(line, p)) {
-                    if (this.Permissions.checkpermissions(p, "create")) {
+                    if (this.Permissions.checkpermissions(p, "AnimalShop.create")) {
                         event.getPlayer().sendMessage(ChatColor.DARK_BLUE + "[AnimalShop]" + ChatColor.GOLD + " Successfully created AnimalShop!");
                         event.setLine(0, "[AnimalShop]");
                     } else {
@@ -131,7 +131,7 @@ public class ShopPlayerListener implements Listener {
         Sign s = (Sign) event.getBlock().getState();
         String[] line = s.getLines();
         if (this.plugin.blockIsValid(line, p)) {
-            if (!this.Permissions.checkpermissions(p, "create")) {
+            if (!this.Permissions.checkpermissions(p, "AnimalShop.create")) {
                 event.setCancelled(true);
             } else {
                 event.getPlayer().sendMessage(ChatColor.DARK_BLUE + "[AnimalShop]" + ChatColor.GOLD + "Destroying AnimalShop");

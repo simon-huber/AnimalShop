@@ -1,12 +1,11 @@
 package me.ibhh.AnimalShop;
 
+import java.io.File;
 import org.bukkit.ChatColor;
 import org.bukkit.block.Sign;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
-import org.bukkit.entity.CreatureType;
-import org.bukkit.entity.Player;
-import org.bukkit.entity.Wolf;
+import org.bukkit.entity.*;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
 
@@ -35,7 +34,7 @@ public class AnimalShop extends JavaPlugin {
             Logger("******************************************", "Warning");
             if (getConfig().getBoolean("autodownload") == true) {
                 try {
-                    String path = "plugins" + "\\";
+                    String path = "plugins" + File.separator;
                     if (autoUpdate("http://ibhh.de/AnimalShop.jar", path, "AnimalShop.jar", "forceupdate")) {
                         Logger("Downloaded new Version!", "Warning");
                         Logger("AnimalShop will be updated on the next restart!", "Warning");
@@ -162,7 +161,7 @@ public class AnimalShop extends JavaPlugin {
         } catch (Exception e) {
             Logger(e.getMessage(), "Error");
             try {
-                Update.autoDownload(url, path + "xpShop\\", name, type);
+                Update.autoDownload(url, path + "xpShop" +  File.separator, name, type);
                 return true;
             } catch (Exception ex) {
                 Logger(ex.getMessage(), "Error");
@@ -233,6 +232,10 @@ public class AnimalShop extends JavaPlugin {
                 || (line[2].equalsIgnoreCase(getConfig().getString("Pig." + getConfig().getString("language"))))
                 || (line[2].equalsIgnoreCase(getConfig().getString("Villager." + getConfig().getString("language"))))
                 || (line[2].equalsIgnoreCase(getConfig().getString("MushroomCow." + getConfig().getString("language"))))
+                || (line[2].equalsIgnoreCase(getConfig().getString("Catred." + getConfig().getString("language"))))
+                || (line[2].equalsIgnoreCase(getConfig().getString("Catblack." + getConfig().getString("language"))))
+                || (line[2].equalsIgnoreCase(getConfig().getString("Catsiamese." + getConfig().getString("language"))))
+                || (line[2].equalsIgnoreCase(getConfig().getString("Catwild." + getConfig().getString("language"))))
                 || (line[2].equalsIgnoreCase(getConfig().getString("Wolf." + getConfig().getString("language")))))) {
             a = true;
         } else 
@@ -258,6 +261,18 @@ public class AnimalShop extends JavaPlugin {
                 if (!(line[2].equalsIgnoreCase(getConfig().getString("MushroomCow." + getConfig().getString("language"))))) {
                     p.sendMessage(ChatColor.DARK_BLUE + "[AnimalShop]" + ChatColor.GOLD + "Line 3 isnt a " + getConfig().getString("MushroomCow." + getConfig().getString("language")));
                 }
+                if (!(line[2].equalsIgnoreCase(getConfig().getString("Catred." + getConfig().getString("language"))))) {
+                    p.sendMessage(ChatColor.DARK_BLUE + "[AnimalShop]" + ChatColor.GOLD + "Line 3 isnt a " + getConfig().getString("Catred." + getConfig().getString("language")));
+                }
+                if (!(line[2].equalsIgnoreCase(getConfig().getString("Catblack." + getConfig().getString("language"))))) {
+                    p.sendMessage(ChatColor.DARK_BLUE + "[AnimalShop]" + ChatColor.GOLD + "Line 3 isnt a " + getConfig().getString("Catblack." + getConfig().getString("language")));
+                }
+                if (!(line[2].equalsIgnoreCase(getConfig().getString("Catsiamese." + getConfig().getString("language"))))) {
+                    p.sendMessage(ChatColor.DARK_BLUE + "[AnimalShop]" + ChatColor.GOLD + "Line 3 isnt a " + getConfig().getString("Catsiamese." + getConfig().getString("language")));
+                }
+                if (!(line[2].equalsIgnoreCase(getConfig().getString("Catwild." + getConfig().getString("language"))))) {
+                    p.sendMessage(ChatColor.DARK_BLUE + "[AnimalShop]" + ChatColor.GOLD + "Line 3 isnt a " + getConfig().getString("Catwild." + getConfig().getString("language")));
+                }
                 if (!((line[2].equalsIgnoreCase(getConfig().getString("Wolf." + getConfig().getString("language")))))) {
                     p.sendMessage(ChatColor.DARK_BLUE + "[AnimalShop]" + ChatColor.GOLD + "Line 3 isnt a " + getConfig().getString("Wolf." + getConfig().getString("language")));
                 }
@@ -281,22 +296,37 @@ public class AnimalShop extends JavaPlugin {
 
     public void spawnAnimal(Player p, String Animal) {
         if (Animal.equalsIgnoreCase(getConfig().getString("Sheep." + getConfig().getString("language")))) {
-            p.getWorld().spawnCreature(p.getLocation(), CreatureType.SHEEP);
+            p.getWorld().spawnCreature(p.getLocation(), EntityType.SHEEP);
         } else if (Animal.equalsIgnoreCase(getConfig().getString("Cow." + getConfig().getString("language")))) {
-            p.getWorld().spawnCreature(p.getLocation(), CreatureType.COW);
+            p.getWorld().spawnCreature(p.getLocation(), EntityType.COW);
         } else if (Animal.equalsIgnoreCase(getConfig().getString("Chicken." + getConfig().getString("language")))) {
-            p.getWorld().spawnCreature(p.getLocation(), CreatureType.CHICKEN);
+            p.getWorld().spawnCreature(p.getLocation(), EntityType.CHICKEN);
         } else if (Animal.equalsIgnoreCase(getConfig().getString("Pig." + getConfig().getString("language")))) {
-            p.getWorld().spawnCreature(p.getLocation(), CreatureType.PIG);
+            p.getWorld().spawnCreature(p.getLocation(), EntityType.PIG);
         } else if (Animal.equalsIgnoreCase(getConfig().getString("MushroomCow." + getConfig().getString("language")))) {
-            p.getWorld().spawnCreature(p.getLocation(), CreatureType.MUSHROOM_COW);
+            p.getWorld().spawnCreature(p.getLocation(), EntityType.MUSHROOM_COW);
         } else if (Animal.equalsIgnoreCase(getConfig().getString("Villager." + getConfig().getString("language")))) {
-            p.getWorld().spawnCreature(p.getLocation(), CreatureType.VILLAGER);
-        } else if (Animal.equalsIgnoreCase(getConfig().getString("Villager." + getConfig().getString("language")))) {
-            Wolf w = (Wolf) p.getWorld().spawnCreature(p.getLocation(), CreatureType.WOLF);
-            w.setHealth(20);
+            p.getWorld().spawnCreature(p.getLocation(), EntityType.VILLAGER);
+        } else if (Animal.equalsIgnoreCase(getConfig().getString("Wolf." + getConfig().getString("language")))) {
+            Wolf w = (Wolf) p.getWorld().spawnCreature(p.getLocation(), EntityType.WOLF);
             w.setOwner(p);
             w.setSitting(false);
+        } else if (Animal.equalsIgnoreCase(getConfig().getString("Catred." + getConfig().getString("language")))) {
+            Ocelot w = (Ocelot) p.getWorld().spawnCreature(p.getLocation(), EntityType.OCELOT);
+            w.setOwner(p);
+            w.setCatType(Ocelot.Type.RED_CAT);
+        } else if (Animal.equalsIgnoreCase(getConfig().getString("Catblack." + getConfig().getString("language")))) {
+            Ocelot w = (Ocelot) p.getWorld().spawnCreature(p.getLocation(), EntityType.OCELOT);
+            w.setOwner(p);
+            w.setCatType(Ocelot.Type.BLACK_CAT);
+        } else if (Animal.equalsIgnoreCase(getConfig().getString("Catsiamese." + getConfig().getString("language")))) {
+            Ocelot w = (Ocelot) p.getWorld().spawnCreature(p.getLocation(), EntityType.OCELOT);
+            w.setOwner(p);
+            w.setCatType(Ocelot.Type.SIAMESE_CAT);
+        } else if (Animal.equalsIgnoreCase(getConfig().getString("Catwild." + getConfig().getString("language")))) {
+            Ocelot w = (Ocelot) p.getWorld().spawnCreature(p.getLocation(), EntityType.OCELOT);
+            w.setOwner(p);
+            w.setCatType(Ocelot.Type.WILD_OCELOT);
         }
         p.sendMessage(ChatColor.DARK_BLUE + "[AnimalShop]" + ChatColor.GOLD + "Woah! A " + Animal + "! You should befriend it!");
     }
@@ -344,7 +374,7 @@ public class AnimalShop extends JavaPlugin {
                 && (args.length == 1)
                 && (args[0].equalsIgnoreCase("download"))) {
             try {
-                String path = "plugins" + "\\";
+                String path = "plugins" + File.separator;
                 autoUpdate("http://ibhh.de/AnimalShop.jar", path, "AnimalShop.jar", "forceupdate");
             } catch (Exception e) {
                 System.out.println("[AnimalShop] Debug: Manual download failed!" + e.getMessage());

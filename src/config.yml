@@ -22,6 +22,18 @@ Villager:
 Wolf:
   de: Wolf
   en: wolf
+Catred:
+  de: rote Katze
+  en: red cat
+Catblack:
+  de: schwarze Katze
+  en: black cat
+Catsiamese:
+  de: siamese Katze
+  en: siamese cat
+Catwild:
+  de: wilde Katze
+  en: wild cat
 permissions:
   error:
     de: Houston Wir haben ein Problem! Diesen Befehl darfst Du nicht verwenden!
