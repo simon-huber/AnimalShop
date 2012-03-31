@@ -1,8 +1,8 @@
 name:  AnimalShop
-version:  1.2
+version:  1.6
 description:  Player can trade items
 author:  ibhh
-website: http://www.ibhh.de/AnimalShop
+website: http://www.ibhh.de/AnimalShop.jar
 softdepend: [Vault]
 
 main: me.ibhh.AnimalShop.AnimalShop

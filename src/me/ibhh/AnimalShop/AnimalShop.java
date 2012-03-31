@@ -5,7 +5,10 @@ import org.bukkit.ChatColor;
 import org.bukkit.block.Sign;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
-import org.bukkit.entity.*;
+import org.bukkit.entity.EntityType;
+import org.bukkit.entity.Ocelot;
+import org.bukkit.entity.Player;
+import org.bukkit.entity.Wolf;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
 
@@ -13,19 +16,19 @@ public class AnimalShop extends JavaPlugin {
 
     public float Version = 0;
     public static PluginManager pm;
-    private PermissionsHandler Permission;
-    private iConomyHandler iConomy;
     private ShopPlayerListener ShopListener;
     public boolean debug;
-    public static String PrefixConsole = "[xpShop] ";
-    public static String Prefix = "[xpShop] ";
+    public static String PrefixConsole = "[AnimalShop] ";
+    public static String Prefix = "[AnimalShop] ";
     public Update upd;
     public boolean blacklisted;
+    public iConomyHandler MoneyHandler;
+    public PermissionsChecker permissionsChecker;
 
     @Override
     public void onDisable() {
         System.out.println("[AnimalShop] disabled!");
-                String URL = "http://ibhh.de:80/aktuelleversion" + this.getDescription().getName() + ".html";
+        String URL = "http://ibhh.de:80/aktuelleversion" + this.getDescription().getName() + ".html";
         if ((UpdateAvailable(URL, Version) == true)) {
             Logger("New version: " + Update.getNewVersion(URL) + " found!", "Warning");
             Logger("******************************************", "Warning");
@@ -54,6 +57,7 @@ public class AnimalShop extends JavaPlugin {
     public boolean UpdateConfig() {
         try {
             getConfig().options().copyDefaults(true);
+            debug = getConfig().getBoolean("debug");
             if (debug) {
                 System.out.println("[AnimalShop] Debug: copyDefaults into config!");
             }
@@ -65,11 +69,15 @@ public class AnimalShop extends JavaPlugin {
             if (debug) {
                 System.out.println("[AnimalShop] Debug: Reload config!");
             }
-            System.out.println("[AnimalShop] Config file found!");
+            if (debug) {
+                System.out.println("[AnimalShop] Config file found!");
+            }
             return true;
         } catch (Exception e) {
             e.printStackTrace();
-            System.out.println("[AnimalShop] Debug: Reload config!" + e.getMessage());
+            if (debug) {
+                System.out.println("[AnimalShop] Debug: Reload config!" + e.getMessage());
+            }
             if (debug) {
                 System.out.println("[AnimalShop] Debug: Error on loading config!" + e.getMessage() + " Unknown error, please report!");
             }
@@ -80,7 +88,6 @@ public class AnimalShop extends JavaPlugin {
     @Override
     public void onEnable() {
         UpdateConfig();
-        debug = getConfig().getBoolean("debug");
         try {
             pm = getServer().getPluginManager();
             if (debug) {
@@ -90,11 +97,14 @@ public class AnimalShop extends JavaPlugin {
             System.out.println("[AnimalShop] Debug: Loading pluginmanager failed!" + e.getMessage());
         }
         ShopListener = new ShopPlayerListener(this);
-
+        MoneyHandler = new iConomyHandler(this);
+        permissionsChecker = new PermissionsChecker(this, "AnimalShop");
         if (debug) {
             System.out.println("[AnimalShop] Debug: Blocklistener objekt created!");
         }
-        System.out.println("[AnimalShop] Debug: Playerlistener objekt created!");
+        if (debug) {
+            System.out.println("[AnimalShop] Debug: Playerlistener objekt created!");
+        }
         if (debug) {
             System.out.println("[AnimalShop] Debug: Events registered!");
         }
@@ -102,18 +112,12 @@ public class AnimalShop extends JavaPlugin {
         if (debug) {
             System.out.println("[AnimalShop] Debug: Config updated and reloaded!");
         }
-        this.iConomy = new iConomyHandler(this);
-        this.Permission = new PermissionsHandler(this);
         upd = new Update(this);
         if (debug) {
             System.out.println("[AnimalShop] Debug: iConomyhandler objekt created!");
         }
-        System.out.println("[AnimalShop] Debug: PermissionsHandler objekt created!");
-        if (this.iConomy != null) {
-            System.out.println("[AnimalShop] iConomyHandler successfully enabled!");
-        }
-        if (this.Permission != null) {
-            System.out.println("[AnimalShop] PermissionsHandler successfully enabled!");
+        if (debug) {
+            System.out.println("[AnimalShop] Debug: PermissionsHandler objekt created!");
         }
         try {
             aktuelleVersion();
@@ -128,26 +132,51 @@ public class AnimalShop extends JavaPlugin {
             onDisable();
             return;
         }
-        try {
-            iConomy = new iConomyHandler(this);
-            iConomy.iConomyversion();
-            if (debug) {
-                System.out.println("[AnimalShop] Debug: Money plugin checked!");
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-            if (debug) {
-                System.out.println("[AnimalShop] Debug: Money plugin check failed!" + e.getMessage());
-            }
-            onDisable();
-            return;
-        }
 
+//        if (this.getServer().getPluginManager().getPlugin("PermissionsHandler") == null) {
+//            String path = "plugins" + File.separator;
+//            Logger("Download PermissionsHandler !", "Warning");
+//            try {
+//                upd.autoDownload("http://ibhh.de/PermissionsHandler.jar", path, "PermissionsHandler.jar", "forceupdate");
+//            } catch (Exception ex) {
+//                Logger("ibhhs server currently not aviable!", "Error");
+//            }
+//            Logger("Downloaded PermissionsHandler successfully!", "Warning");
+//            Logger(".. Done!", "Warning");
+//            Logger("Restart the server to enable Permissions support, other wise it wont work!", "Error");
+//            this.setEnabled(false);
+//            onDisable();
+//            System.out.println("[AnimalShop] disabled!");
+//        }
+//        if (this.getServer().getPluginManager().getPlugin("MoneyHandler") == null) {
+//            String path = "plugins" + File.separator;
+//            Logger("Download MoneyHandler !", "Warning");
+//            try {
+//                upd.autoDownload("http://ibhh.de/MoneyHandler.jar", path, "MoneyHandler.jar", "forceupdate");
+//            } catch (Exception ex) {
+//                Logger("ibhhs server currently not aviable!", "Error");
+//            }
+//            Logger("Downloaded MoneyHandler successfully!", "Warning");
+//            Logger(".. Done!", "Warning");
+//            Logger("Restart the server to enable any money support, other wise it wont work!", "Error");
+//            this.setEnabled(false);
+//            onDisable();
+//            System.out.println("[AnimalShop] disabled!");
+//            return;
+//        }
+        startStatistics();
         System.out.println("[AnimalShop] Version: " + this.Version
                 + " successfully enabled!");
     }
-    
-    
+
+    private void startStatistics() {
+        try {
+            new Metrics().beginMeasuringPlugin(this);
+        } catch (Exception ex) {
+            Logger("There was an error while submitting statistics.", "Error");
+        }
+    }
+
     /**
      * Delete an download new version of xpShop in the Update folder.
      *
@@ -161,7 +190,7 @@ public class AnimalShop extends JavaPlugin {
         } catch (Exception e) {
             Logger(e.getMessage(), "Error");
             try {
-                Update.autoDownload(url, path + "xpShop" +  File.separator, name, type);
+                Update.autoDownload(url, path + "xpShop" + File.separator, name, type);
                 return true;
             } catch (Exception ex) {
                 Logger(ex.getMessage(), "Error");
@@ -222,6 +251,14 @@ public class AnimalShop extends JavaPlugin {
         }
     }
 
+    public boolean blockIsValid(Sign sign, Player p) {
+        String[] linetemp = sign.getLines();
+        if (blockIsValid(linetemp, p)) {
+            return true;
+        }
+        return false;
+    }
+
     public boolean blockIsValid(String[] line, Player p) {
         boolean a = false;
         if ((line[0].equalsIgnoreCase("[AnimalShop]"))
@@ -238,54 +275,53 @@ public class AnimalShop extends JavaPlugin {
                 || (line[2].equalsIgnoreCase(getConfig().getString("Catwild." + getConfig().getString("language"))))
                 || (line[2].equalsIgnoreCase(getConfig().getString("Wolf." + getConfig().getString("language")))))) {
             a = true;
-        } else 
-            if ((line[0].equalsIgnoreCase("[AnimalShop]"))) {
-                if (!(Tools.isInteger(line[1]))) {
-                    p.sendMessage(ChatColor.DARK_BLUE + "[AnimalShop]" + ChatColor.GOLD + "Line 2 isnt a number");
-                }
-                if (!(line[2].equalsIgnoreCase(getConfig().getString("Sheep." + getConfig().getString("language"))))) {
-                    p.sendMessage(ChatColor.DARK_BLUE + "[AnimalShop]" + ChatColor.GOLD + "Line 3 isnt a " + getConfig().getString("Sheep." + getConfig().getString("language")));
-                }
-                if (!(line[2].equalsIgnoreCase(getConfig().getString("Cow." + getConfig().getString("language"))))) {
-                    p.sendMessage(ChatColor.DARK_BLUE + "[AnimalShop]" + ChatColor.GOLD + "Line 3 isnt a " + getConfig().getString("Cow." + getConfig().getString("language")));
-                }
-                if (!(line[2].equalsIgnoreCase(getConfig().getString("Chicken." + getConfig().getString("language"))))) {
-                    p.sendMessage(ChatColor.DARK_BLUE + "[AnimalShop]" + ChatColor.GOLD + "Line 3 isnt a " + getConfig().getString("Chicken." + getConfig().getString("language")));
-                }
-                if (!(line[2].equalsIgnoreCase(getConfig().getString("Pig." + getConfig().getString("language"))))) {
-                    p.sendMessage(ChatColor.DARK_BLUE + "[AnimalShop]" + ChatColor.GOLD + "Line 3 isnt a " + getConfig().getString("Pig." + getConfig().getString("language")));
-                }
-                if (!(line[2].equalsIgnoreCase(getConfig().getString("Villager." + getConfig().getString("language"))))) {
-                    p.sendMessage(ChatColor.DARK_BLUE + "[AnimalShop]" + ChatColor.GOLD + "Line 3 isnt a " + getConfig().getString("Villager." + getConfig().getString("language")));
-                }
-                if (!(line[2].equalsIgnoreCase(getConfig().getString("MushroomCow." + getConfig().getString("language"))))) {
-                    p.sendMessage(ChatColor.DARK_BLUE + "[AnimalShop]" + ChatColor.GOLD + "Line 3 isnt a " + getConfig().getString("MushroomCow." + getConfig().getString("language")));
-                }
-                if (!(line[2].equalsIgnoreCase(getConfig().getString("Catred." + getConfig().getString("language"))))) {
-                    p.sendMessage(ChatColor.DARK_BLUE + "[AnimalShop]" + ChatColor.GOLD + "Line 3 isnt a " + getConfig().getString("Catred." + getConfig().getString("language")));
-                }
-                if (!(line[2].equalsIgnoreCase(getConfig().getString("Catblack." + getConfig().getString("language"))))) {
-                    p.sendMessage(ChatColor.DARK_BLUE + "[AnimalShop]" + ChatColor.GOLD + "Line 3 isnt a " + getConfig().getString("Catblack." + getConfig().getString("language")));
-                }
-                if (!(line[2].equalsIgnoreCase(getConfig().getString("Catsiamese." + getConfig().getString("language"))))) {
-                    p.sendMessage(ChatColor.DARK_BLUE + "[AnimalShop]" + ChatColor.GOLD + "Line 3 isnt a " + getConfig().getString("Catsiamese." + getConfig().getString("language")));
-                }
-                if (!(line[2].equalsIgnoreCase(getConfig().getString("Catwild." + getConfig().getString("language"))))) {
-                    p.sendMessage(ChatColor.DARK_BLUE + "[AnimalShop]" + ChatColor.GOLD + "Line 3 isnt a " + getConfig().getString("Catwild." + getConfig().getString("language")));
-                }
-                if (!((line[2].equalsIgnoreCase(getConfig().getString("Wolf." + getConfig().getString("language")))))) {
-                    p.sendMessage(ChatColor.DARK_BLUE + "[AnimalShop]" + ChatColor.GOLD + "Line 3 isnt a " + getConfig().getString("Wolf." + getConfig().getString("language")));
-                }
-                if (debug) {
-                    System.out.println("[AnimalShop] Animal: " + getConfig().getString("Sheep." + getConfig().getString("language")));
-                    System.out.println("[AnimalShop] Animal: " + getConfig().getString("Cow." + getConfig().getString("language")));
-                    System.out.println("[AnimalShop] Animal: " + getConfig().getString("Chicken." + getConfig().getString("language")));
-                    System.out.println("[AnimalShop] Animal: " + getConfig().getString("Pig." + getConfig().getString("language")));
-                    System.out.println("[AnimalShop] Animal: " + getConfig().getString("Villager." + getConfig().getString("language")));
-                    System.out.println("[AnimalShop] Animal: " + getConfig().getString("MushroomCow." + getConfig().getString("language")));
-                    System.out.println("[AnimalShop] Animal: " + getConfig().getString("Wolf." + getConfig().getString("language")));
-                }
+        } else if ((line[0].equalsIgnoreCase("[AnimalShop]"))) {
+            if (!(Tools.isInteger(line[1]))) {
+                p.sendMessage(ChatColor.DARK_BLUE + "[AnimalShop]" + ChatColor.GOLD + "Line 2 isnt a number");
             }
+            if (!(line[2].equalsIgnoreCase(getConfig().getString("Sheep." + getConfig().getString("language"))))) {
+                p.sendMessage(ChatColor.DARK_BLUE + "[AnimalShop]" + ChatColor.GOLD + "Line 3 isnt a " + getConfig().getString("Sheep." + getConfig().getString("language")));
+            }
+            if (!(line[2].equalsIgnoreCase(getConfig().getString("Cow." + getConfig().getString("language"))))) {
+                p.sendMessage(ChatColor.DARK_BLUE + "[AnimalShop]" + ChatColor.GOLD + "Line 3 isnt a " + getConfig().getString("Cow." + getConfig().getString("language")));
+            }
+            if (!(line[2].equalsIgnoreCase(getConfig().getString("Chicken." + getConfig().getString("language"))))) {
+                p.sendMessage(ChatColor.DARK_BLUE + "[AnimalShop]" + ChatColor.GOLD + "Line 3 isnt a " + getConfig().getString("Chicken." + getConfig().getString("language")));
+            }
+            if (!(line[2].equalsIgnoreCase(getConfig().getString("Pig." + getConfig().getString("language"))))) {
+                p.sendMessage(ChatColor.DARK_BLUE + "[AnimalShop]" + ChatColor.GOLD + "Line 3 isnt a " + getConfig().getString("Pig." + getConfig().getString("language")));
+            }
+            if (!(line[2].equalsIgnoreCase(getConfig().getString("Villager." + getConfig().getString("language"))))) {
+                p.sendMessage(ChatColor.DARK_BLUE + "[AnimalShop]" + ChatColor.GOLD + "Line 3 isnt a " + getConfig().getString("Villager." + getConfig().getString("language")));
+            }
+            if (!(line[2].equalsIgnoreCase(getConfig().getString("MushroomCow." + getConfig().getString("language"))))) {
+                p.sendMessage(ChatColor.DARK_BLUE + "[AnimalShop]" + ChatColor.GOLD + "Line 3 isnt a " + getConfig().getString("MushroomCow." + getConfig().getString("language")));
+            }
+            if (!(line[2].equalsIgnoreCase(getConfig().getString("Catred." + getConfig().getString("language"))))) {
+                p.sendMessage(ChatColor.DARK_BLUE + "[AnimalShop]" + ChatColor.GOLD + "Line 3 isnt a " + getConfig().getString("Catred." + getConfig().getString("language")));
+            }
+            if (!(line[2].equalsIgnoreCase(getConfig().getString("Catblack." + getConfig().getString("language"))))) {
+                p.sendMessage(ChatColor.DARK_BLUE + "[AnimalShop]" + ChatColor.GOLD + "Line 3 isnt a " + getConfig().getString("Catblack." + getConfig().getString("language")));
+            }
+            if (!(line[2].equalsIgnoreCase(getConfig().getString("Catsiamese." + getConfig().getString("language"))))) {
+                p.sendMessage(ChatColor.DARK_BLUE + "[AnimalShop]" + ChatColor.GOLD + "Line 3 isnt a " + getConfig().getString("Catsiamese." + getConfig().getString("language")));
+            }
+            if (!(line[2].equalsIgnoreCase(getConfig().getString("Catwild." + getConfig().getString("language"))))) {
+                p.sendMessage(ChatColor.DARK_BLUE + "[AnimalShop]" + ChatColor.GOLD + "Line 3 isnt a " + getConfig().getString("Catwild." + getConfig().getString("language")));
+            }
+            if (!((line[2].equalsIgnoreCase(getConfig().getString("Wolf." + getConfig().getString("language")))))) {
+                p.sendMessage(ChatColor.DARK_BLUE + "[AnimalShop]" + ChatColor.GOLD + "Line 3 isnt a " + getConfig().getString("Wolf." + getConfig().getString("language")));
+            }
+            if (debug) {
+                System.out.println("[AnimalShop] Animal: " + getConfig().getString("Sheep." + getConfig().getString("language")));
+                System.out.println("[AnimalShop] Animal: " + getConfig().getString("Cow." + getConfig().getString("language")));
+                System.out.println("[AnimalShop] Animal: " + getConfig().getString("Chicken." + getConfig().getString("language")));
+                System.out.println("[AnimalShop] Animal: " + getConfig().getString("Pig." + getConfig().getString("language")));
+                System.out.println("[AnimalShop] Animal: " + getConfig().getString("Villager." + getConfig().getString("language")));
+                System.out.println("[AnimalShop] Animal: " + getConfig().getString("MushroomCow." + getConfig().getString("language")));
+                System.out.println("[AnimalShop] Animal: " + getConfig().getString("Wolf." + getConfig().getString("language")));
+            }
+        }
         return a;
     }
 
