@@ -24,6 +24,7 @@ public class AnimalShop extends JavaPlugin {
     public boolean blacklisted;
     public iConomyHandler MoneyHandler;
     public PermissionsChecker permissionsChecker;
+    public Metrics metrics;
 
     @Override
     public void onDisable() {
@@ -171,7 +172,9 @@ public class AnimalShop extends JavaPlugin {
 
     private void startStatistics() {
         try {
-            new Metrics().beginMeasuringPlugin(this);
+            metrics = new Metrics(this);
+            metrics.enable();
+            metrics.start();
         } catch (Exception ex) {
             Logger("There was an error while submitting statistics.", "Error");
         }
