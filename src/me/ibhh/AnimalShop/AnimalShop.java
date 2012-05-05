@@ -367,7 +367,7 @@ public class AnimalShop extends JavaPlugin {
             w.setOwner(p);
             w.setCatType(Ocelot.Type.WILD_OCELOT);
         }
-        p.sendMessage(ChatColor.DARK_BLUE + "[AnimalShop]" + ChatColor.GOLD + "Woah! A " + Animal + "! You should befriend it!");
+        p.sendMessage(ChatColor.DARK_BLUE + "[AnimalShop] " + ChatColor.GOLD + String.format(getConfig().getString("buymessage." + getConfig().getString("language")), Animal));
     }
 
     protected static boolean isConsole(CommandSender sender) {

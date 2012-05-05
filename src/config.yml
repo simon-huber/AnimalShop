@@ -1,6 +1,9 @@
 language: en
 autodownload: true
 debug: false
+buymessage: 
+  de: Woah! Ein(e) %1$s! Sei freundlich zu ihm/ihr!
+  en: Woah! A %1$s! You should befriend it!
 Sheep:
   de: Schaf
   en: Sheep
