@@ -332,13 +332,13 @@ public class AnimalShop extends JavaPlugin {
      */
     public void Logger(String msg, String TYPE) {
         if (TYPE.equalsIgnoreCase("Warning") || TYPE.equalsIgnoreCase("Error")) {
-            System.err.println("[CommandLogger] " + TYPE + ": " + msg);
+            System.err.println("[AnimalShop] " + TYPE + ": " + msg);
         } else if (TYPE.equalsIgnoreCase("Debug")) {
             if (getConfig().getBoolean("debug")) {
-                System.out.println("[CommandLogger] " + "Debug: " + msg);
+                System.out.println("[AnimalShop] " + "Debug: " + msg);
             }
         } else {
-            System.out.println("[CommandLogger] " + msg);
+            System.out.println("[AnimalShop] " + msg);
         }
     }
 
@@ -352,13 +352,13 @@ public class AnimalShop extends JavaPlugin {
     public void PlayerLogger(Player p, String msg, String TYPE) {
         if (TYPE.equalsIgnoreCase("Error")) {
             if (getConfig().getBoolean("UsePrefix")) {
-                p.sendMessage(Prefix + "[CommandLogger] " + ChatColor.RED + "Error: " + Text + msg);
+                p.sendMessage(Prefix + "[AnimalShop] " + ChatColor.RED + "Error: " + Text + msg);
             } else {
                 p.sendMessage(ChatColor.RED + "Error: " + Text + msg);
             }
         } else {
             if (getConfig().getBoolean("UsePrefix")) {
-                p.sendMessage(Prefix + "[CommandLogger] " + Text + msg);
+                p.sendMessage(Prefix + "[AnimalShop] " + Text + msg);
             } else {
                 p.sendMessage(Text + msg);
             }
@@ -502,6 +502,31 @@ public class AnimalShop extends JavaPlugin {
                 if (args.length == 1) {
                     if (debug) {
                         System.out.println("[AnimalShop] Debug: args.lenght == 1!");
+                    }
+                    if (args[0].equalsIgnoreCase("reload")) {
+                        if (permissionsChecker.checkpermissions(player, getConfig().getString("AnimalShop.reload"))) {
+                            try {
+                                PlayerLogger(player, "Please wait: Reloading this plugin!", "Warning");
+                                plugman.unloadPlugin("AnimalShop");
+                                plugman.loadPlugin("AnimalShop");
+                                PlayerLogger(player, "Reloaded!", "");
+                            } catch (InvalidPluginException ex) {
+                                java.util.logging.Logger.getLogger(AnimalShop.class.getName()).log(Level.SEVERE, null, ex);
+                            } catch (InvalidDescriptionException ex) {
+                                java.util.logging.Logger.getLogger(AnimalShop.class.getName()).log(Level.SEVERE, null, ex);
+                            } catch (NoSuchFieldException ex) {
+                                java.util.logging.Logger.getLogger(AnimalShop.class.getName()).log(Level.SEVERE, null, ex);
+                            } catch (IllegalAccessException ex) {
+                                java.util.logging.Logger.getLogger(AnimalShop.class.getName()).log(Level.SEVERE, null, ex);
+                            }
+                        }
+                        return true;
+                    }
+                    if (args[0].equalsIgnoreCase("update")) {
+                        if (permissionsChecker.checkpermissions(player, "CommandLogger.update")) {
+                            install();
+                            return true;
+                        }
                     }
                     if (args[0].equalsIgnoreCase("list")) {
                         if (debug) {

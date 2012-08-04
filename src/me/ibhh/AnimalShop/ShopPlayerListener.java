@@ -131,7 +131,7 @@ public class ShopPlayerListener implements Listener {
                     String[] line = sign.getLines();
                     if (plugin.blockIsValid(sign, p)) {
                         if (plugin.permissionsChecker.checkpermissions(p, "AnimalShop.create")) {
-                            plugin.PlayerLogger(p, "Destroying xpShop!", "");
+                            plugin.PlayerLogger(p, "Destroying AnimalShop!", "");
                         } else {
                             event.setCancelled(true);
                         }
@@ -145,7 +145,7 @@ public class ShopPlayerListener implements Listener {
             if (line[0].equalsIgnoreCase("[AnimalShop]")) {
                 if (this.plugin.blockIsValid(line, p)) {
                     if (plugin.permissionsChecker.checkpermissions(p, "AnimalShop.create")) {
-                        plugin.PlayerLogger(p, "Destroying xpShop!", "");
+                        plugin.PlayerLogger(p, "Destroying AnimalShop!", "");
                     } else {
                         event.setCancelled(true);
                     }
