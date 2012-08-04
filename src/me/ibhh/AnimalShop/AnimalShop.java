@@ -1,6 +1,7 @@
 package me.ibhh.AnimalShop;
 
 import java.io.File;
+import java.util.logging.Level;
 import org.bukkit.ChatColor;
 import org.bukkit.block.Sign;
 import org.bukkit.command.Command;
@@ -9,50 +10,129 @@ import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Ocelot;
 import org.bukkit.entity.Player;
 import org.bukkit.entity.Wolf;
+import org.bukkit.plugin.InvalidDescriptionException;
+import org.bukkit.plugin.InvalidPluginException;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
 
 public class AnimalShop extends JavaPlugin {
 
     public float Version = 0;
+    public float newversion = 0;
     public static PluginManager pm;
     private ShopPlayerListener ShopListener;
     public boolean debug;
-    public static String PrefixConsole = "[AnimalShop] ";
-    public static String Prefix = "[AnimalShop] ";
     public Update upd;
     public boolean blacklisted;
     public iConomyHandler MoneyHandler;
     public PermissionsChecker permissionsChecker;
+    public PlayerManager playerManager;
+    public Utilities plugman;
     public Metrics metrics;
+    public boolean toggle = true;
+    public boolean updateaviable = false;
+    public ChatColor Prefix, Text;
 
     @Override
     public void onDisable() {
+        toggle = true;
         System.out.println("[AnimalShop] disabled!");
-        String URL = "http://ibhh.de:80/aktuelleversion" + this.getDescription().getName() + ".html";
-        if ((UpdateAvailable(URL, Version) == true)) {
-            Logger("New version: " + Update.getNewVersion(URL) + " found!", "Warning");
-            Logger("******************************************", "Warning");
-            Logger("*********** Please update!!!! ************", "Warning");
-            Logger("* http://ibhh.de/AnimalShop.jar *", "Warning");
-            Logger("******************************************", "Warning");
-            if (getConfig().getBoolean("autodownload") == true) {
-                try {
-                    String path = "plugins" + File.separator;
-                    if (autoUpdate("http://ibhh.de/AnimalShop.jar", path, "AnimalShop.jar", "forceupdate")) {
-                        Logger("Downloaded new Version!", "Warning");
-                        Logger("AnimalShop will be updated on the next restart!", "Warning");
+        if (getConfig().getBoolean("internet")) {
+            UpdateAvailable(Version);
+        }
+    }
+
+    public void forceUpdate() {
+        if (getConfig().getBoolean("internet")) {
+            try {
+                if (updateaviable) {
+                    Logger("New version: " + newversion + " found!", "Warning");
+                    Logger("******************************************", "Warning");
+                    Logger("*********** Please update!!!! ************", "Warning");
+                    Logger("* http://ibhh.de/AnimalShop.jar *", "Warning");
+                    Logger("******************************************", "Warning");
+                    if (getConfig().getBoolean("autodownload") || getConfig().getBoolean("installondownload")) {
+                        if (getConfig().getBoolean("autodownload")) {
+                            try {
+                                String path = "plugins" + File.separator + "AnimalShop" + File.separator;
+                                if (upd.download(path)) {
+                                    Logger("Downloaded new Version!", "Warning");
+                                } else {
+                                    Logger(" Cant download new Version!", "Warning");
+                                }
+                            } catch (Exception e) {
+                                Logger("Error on dowloading new Version!", "Error");
+                                e.printStackTrace();
+                            }
+                        }
+                        if (getConfig().getBoolean("installondownload")) {
+                            try {
+                                String path = "plugins" + File.separator;
+                                if (upd.download(path)) {
+                                    Logger("Downloaded new Version!", "Warning");
+                                    Logger("AnimalShop will be updated on the next restart!", "Warning");
+                                } else {
+                                    Logger(" Cant download new Version!", "Warning");
+                                }
+                            } catch (Exception e) {
+                                Logger("Error on donwloading new Version!", "Error");
+                                e.printStackTrace();
+                            }
+                        }
                     } else {
-                        Logger(" Cant download new Version!", "Warning");
+                        Logger("Please type [AnimalShop download] to download manual! ", "Warning");
                     }
-                } catch (Exception e) {
-                    Logger("Error on donwloading new Version!", "Error");
-                    e.printStackTrace();
                 }
-            } else {
-                Logger("Please type [AnimalShop download] to download manual! ", "Warning");
+            } catch (Exception e) {
+                Logger("Error on doing update check or update! Message: " + e.getMessage(), "Error");
+                Logger("may the mainserver is down!", "Error");
             }
         }
+    }
+
+    public void install() {
+        if (getConfig().getBoolean("internet")) {
+            try {
+                String path = "plugins" + File.separator;
+                if (upd.download(path)) {
+                    Logger("Downloaded new Version!", "Warning");
+                    Logger("AnimalShop will be updated on the next restart!", "Warning");
+                } else {
+                    Logger(" Cant download new Version!", "Warning");
+                }
+            } catch (Exception e) {
+                Logger("Error on donwloading new Version!", "Error");
+                e.printStackTrace();
+            }
+        }
+        if (getConfig().getBoolean("installondownload")) {
+            Logger("Found Update! Installing now because of 'installondownload = true', please wait!", "Warning");
+            playerManager.BroadcastMsg("AnimalShop.update", "Found Update! Installing now because of 'installondownload = true', please wait!");
+        }
+        try {
+            plugman.unloadPlugin("AnimalShop");
+        } catch (NoSuchFieldException ex) {
+            Logger("Error on installing! Please check the log!", "Error");
+            playerManager.BroadcastMsg("AnimalShop.update", "Error on installing! Please check the log!");
+            java.util.logging.Logger.getLogger(AnimalShop.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (IllegalAccessException ex) {
+            Logger("Error on installing! Please check the log!", "Error");
+            playerManager.BroadcastMsg("AnimalShop.update", "Error on installing! Please check the log!");
+            java.util.logging.Logger.getLogger(AnimalShop.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        try {
+            plugman.loadPlugin("AnimalShop");
+        } catch (InvalidPluginException ex) {
+            Logger("Error on loading after installing! Please check the log!", "Error");
+            playerManager.BroadcastMsg("AnimalShop.update", "Error on loading after installing! Please check the log!");
+            java.util.logging.Logger.getLogger(AnimalShop.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (InvalidDescriptionException ex) {
+            Logger("Error on loading after installing! Please check the log!", "Error");
+            playerManager.BroadcastMsg("AnimalShop.update", "Error on loading after installing! Please check the log!");
+            java.util.logging.Logger.getLogger(AnimalShop.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        Logger("Installing finished!", "");
+        playerManager.BroadcastMsg("AnimalShop.update", "Installing finished!");
     }
 
     public boolean UpdateConfig() {
@@ -89,6 +169,8 @@ public class AnimalShop extends JavaPlugin {
     @Override
     public void onEnable() {
         UpdateConfig();
+        Prefix = ChatColor.getByChar(getConfig().getString("PrefixColor"));
+        Text = ChatColor.getByChar(getConfig().getString("TextColor"));
         try {
             pm = getServer().getPluginManager();
             if (debug) {
@@ -100,26 +182,9 @@ public class AnimalShop extends JavaPlugin {
         ShopListener = new ShopPlayerListener(this);
         MoneyHandler = new iConomyHandler(this);
         permissionsChecker = new PermissionsChecker(this, "AnimalShop");
-        if (debug) {
-            System.out.println("[AnimalShop] Debug: Blocklistener objekt created!");
-        }
-        if (debug) {
-            System.out.println("[AnimalShop] Debug: Playerlistener objekt created!");
-        }
-        if (debug) {
-            System.out.println("[AnimalShop] Debug: Events registered!");
-        }
-
-        if (debug) {
-            System.out.println("[AnimalShop] Debug: Config updated and reloaded!");
-        }
         upd = new Update(this);
-        if (debug) {
-            System.out.println("[AnimalShop] Debug: iConomyhandler objekt created!");
-        }
-        if (debug) {
-            System.out.println("[AnimalShop] Debug: PermissionsHandler objekt created!");
-        }
+        playerManager = new PlayerManager(this);
+        plugman = new Utilities(this);
         try {
             aktuelleVersion();
             if (debug) {
@@ -133,38 +198,55 @@ public class AnimalShop extends JavaPlugin {
             onDisable();
             return;
         }
+        if (getConfig().getBoolean("internet")) {
+            try {
+                UpdateAvailable(Version);
+                if (updateaviable) {
+                    Logger("New version: " + upd.checkUpdate() + " found!", "Warning");
+                    Logger("******************************************", "Warning");
+                    Logger("*********** Please update!!!! ************", "Warning");
+                    Logger("* http://ibhh.de/AnimalShop.jar *", "Warning");
+                    Logger("******************************************", "Warning");
+                }
+            } catch (Exception e) {
+                Logger("Error on doing update check! Message: " + e.getMessage(), "Error");
+                Logger("may the mainserver is down!", "Error");
+            }
+        }
+        this.getServer().getScheduler().scheduleAsyncRepeatingTask(this, new Runnable() {
 
-//        if (this.getServer().getPluginManager().getPlugin("PermissionsHandler") == null) {
-//            String path = "plugins" + File.separator;
-//            Logger("Download PermissionsHandler !", "Warning");
-//            try {
-//                upd.autoDownload("http://ibhh.de/PermissionsHandler.jar", path, "PermissionsHandler.jar", "forceupdate");
-//            } catch (Exception ex) {
-//                Logger("ibhhs server currently not aviable!", "Error");
-//            }
-//            Logger("Downloaded PermissionsHandler successfully!", "Warning");
-//            Logger(".. Done!", "Warning");
-//            Logger("Restart the server to enable Permissions support, other wise it wont work!", "Error");
-//            this.setEnabled(false);
-//            onDisable();
-//            System.out.println("[AnimalShop] disabled!");
-//        }
-//        if (this.getServer().getPluginManager().getPlugin("MoneyHandler") == null) {
-//            String path = "plugins" + File.separator;
-//            Logger("Download MoneyHandler !", "Warning");
-//            try {
-//                upd.autoDownload("http://ibhh.de/MoneyHandler.jar", path, "MoneyHandler.jar", "forceupdate");
-//            } catch (Exception ex) {
-//                Logger("ibhhs server currently not aviable!", "Error");
-//            }
-//            Logger("Downloaded MoneyHandler successfully!", "Warning");
-//            Logger(".. Done!", "Warning");
-//            Logger("Restart the server to enable any money support, other wise it wont work!", "Error");
-//            this.setEnabled(false);
-//            onDisable();
-//            System.out.println("[AnimalShop] disabled!");
-//            return;
-//        }
+            @Override
+            public void run() {
+                if (getConfig().getBoolean("internet")) {
+                    Logger("Searching update for AnimalShop!", "Debug");
+                    newversion = upd.checkUpdate();
+                    if (newversion == -1) {
+                        newversion = aktuelleVersion();
+                    }
+                    Logger("installed AnimalShop version: " + Version + ", latest version: " + newversion, "Debug");
+                    if (newversion > Version) {
+                        Logger("New version: " + newversion + " found!", "Warning");
+                        Logger("******************************************", "Warning");
+                        Logger("*********** Please update!!!! ************", "Warning");
+                        Logger("* http://ibhh.de/AnimalShop.jar *", "Warning");
+                        Logger("******************************************", "Warning");
+                        updateaviable = true;
+                        if (getConfig().getBoolean("installondownload")) {
+                            install();
+                        }
+                    } else {
+                        Logger("No update found!", "Debug");
+                    }
+                }
+            }
+        }, 400L, 50000L);
+        this.getServer().getScheduler().scheduleAsyncDelayedTask(this, new Runnable() {
+
+            @Override
+            public void run() {
+                toggle = false;
+            }
+        }, 20);
         startStatistics();
         System.out.println("[AnimalShop] Version: " + this.Version
                 + " successfully enabled!");
@@ -181,25 +263,21 @@ public class AnimalShop extends JavaPlugin {
     }
 
     /**
-     * Delete an download new version of xpShop in the Update folder.
+     * Delete an download new version of AnimalShop in the Update folder.
      *
      * @param
      * @return
      */
-    public boolean autoUpdate(String url, String path, String name, String type) {
-        try {
-            Update.autoDownload(url, path, name, type);
-            return true;
-        } catch (Exception e) {
-            Logger(e.getMessage(), "Error");
+    public boolean autoUpdate(final String path) {
+        if (getConfig().getBoolean("internet")) {
             try {
-                Update.autoDownload(url, path + "xpShop" + File.separator, name, type);
-                return true;
-            } catch (Exception ex) {
-                Logger(ex.getMessage(), "Error");
-                return false;
+                upd.download(path);
+            } catch (Exception e) {
+                Logger("Error on doing blacklist update! Message: " + e.getMessage(), "Error");
+                Logger("may the mainserver is down!", "Error");
             }
         }
+        return true;
     }
 
     /**
@@ -223,12 +301,22 @@ public class AnimalShop extends JavaPlugin {
      * @param url from newVersion file + currentVersion
      * @return true if newVersion recommend.
      */
-    public boolean UpdateAvailable(String url, float currVersion) {
-        boolean a = false;
-        if (Update.getNewVersion(url) > currVersion) {
-            a = true;
+    public void UpdateAvailable(final float currVersion) {
+        if (getConfig().getBoolean("internet")) {
+            try {
+                if (upd.checkUpdate() > currVersion) {
+                    updateaviable = true;
+                }
+                if (updateaviable) {
+                    updateaviable = true;
+                } else {
+                    updateaviable = false;
+                }
+            } catch (Exception e) {
+                Logger("Error checking for new version! Message: " + e.getMessage(), "Error");
+                Logger("May the mainserver is down!", "Error");
+            }
         }
-        return a;
     }
 
     public String getPermissionsError() {
@@ -236,21 +324,44 @@ public class AnimalShop extends JavaPlugin {
         return Error;
     }
 
-    public static void Logger(String msg, String TYPE) {
+    /**
+     * Intern logger to send player messages and log it into file
+     *
+     * @param msg
+     * @param TYPE
+     */
+    public void Logger(String msg, String TYPE) {
         if (TYPE.equalsIgnoreCase("Warning") || TYPE.equalsIgnoreCase("Error")) {
-            System.err.println(PrefixConsole + TYPE + ": " + msg);
+            System.err.println("[CommandLogger] " + TYPE + ": " + msg);
         } else if (TYPE.equalsIgnoreCase("Debug")) {
-            System.out.println(PrefixConsole + "Debug: " + msg);
+            if (getConfig().getBoolean("debug")) {
+                System.out.println("[CommandLogger] " + "Debug: " + msg);
+            }
         } else {
-            System.out.println(PrefixConsole + msg);
+            System.out.println("[CommandLogger] " + msg);
         }
     }
 
-    public static void PlayerLogger(Player p, String msg, String TYPE) {
+    /**
+     * Intern logger to send player messages and log it into file
+     *
+     * @param p
+     * @param msg
+     * @param TYPE
+     */
+    public void PlayerLogger(Player p, String msg, String TYPE) {
         if (TYPE.equalsIgnoreCase("Error")) {
-            p.sendMessage(ChatColor.DARK_BLUE + Prefix + ChatColor.GOLD + "Error: " + msg);
+            if (getConfig().getBoolean("UsePrefix")) {
+                p.sendMessage(Prefix + "[CommandLogger] " + ChatColor.RED + "Error: " + Text + msg);
+            } else {
+                p.sendMessage(ChatColor.RED + "Error: " + Text + msg);
+            }
         } else {
-            p.sendMessage(ChatColor.DARK_BLUE + Prefix + ChatColor.GOLD + msg);
+            if (getConfig().getBoolean("UsePrefix")) {
+                p.sendMessage(Prefix + "[CommandLogger] " + Text + msg);
+            } else {
+                p.sendMessage(Text + msg);
+            }
         }
     }
 
@@ -414,7 +525,7 @@ public class AnimalShop extends JavaPlugin {
                 && (args[0].equalsIgnoreCase("download"))) {
             try {
                 String path = "plugins" + File.separator;
-                autoUpdate("http://ibhh.de/AnimalShop.jar", path, "AnimalShop.jar", "forceupdate");
+                upd.download(path);
             } catch (Exception e) {
                 System.out.println("[AnimalShop] Debug: Manual download failed!" + e.getMessage());
             }

@@ -1,6 +1,11 @@
 language: en
 autodownload: true
+installondownload: false
 debug: false
+internet: true
+UsePrefix: true
+PrefixColor: b
+TextColor: 6
 buymessage: 
   de: Woah! Ein(e) %1$s! Sei freundlich zu ihm/ihr!
   en: Woah! A %1$s! You should befriend it!
