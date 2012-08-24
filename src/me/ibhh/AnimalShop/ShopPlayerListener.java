@@ -31,11 +31,12 @@ public class ShopPlayerListener implements Listener {
             Sign s = (Sign) event.getClickedBlock().getState();
             String[] line = s.getLines();
             if (this.plugin.blockIsValid(line, p)) {
-                if (plugin.permissionsChecker.checkpermissions(p, "AnimalShop.use")) {
+                if (plugin.PermissionsHandler.checkpermissions(p, "AnimalShop.use")) {
                     double price = getPrice(s, 1, p);
                     String Animal = getType(s, 2);
                     if ((plugin.MoneyHandler.getBalance(p) - price) >= 0) {
                         plugin.MoneyHandler.substract(price, p);
+                        plugin.metricshandler.AnimalShopSignBuy++;
                         this.plugin.spawnAnimal(p, Animal);
                     } else {
                         p.sendMessage(ChatColor.DARK_BLUE + "[AnimalShop]" + ChatColor.GOLD + "You havent enough money!");
@@ -63,15 +64,28 @@ public class ShopPlayerListener implements Listener {
     @EventHandler
     public void onChange(SignChangeEvent event) {
         Player p = event.getPlayer();
-
         if (event.getLine(0).equalsIgnoreCase("[AnimalShop]")) {
+            if (plugin.debug) {
+                plugin.Logger("Found new sign!", "Debug");
+            }
             try {
                 String[] line = event.getLines();
                 if (plugin.blockIsValid(line, p)) {
-                    if (plugin.permissionsChecker.checkpermissions(p, "AnimalShop.create")) {
+                    if (plugin.PermissionsHandler.checkpermissions(p, "AnimalShop.create")) {
+                        if (plugin.debug) {
+                            plugin.Logger("Player " + p.getName() + " has permission to create AnimalShop!", "Debug");
+                        }
                         event.getPlayer().sendMessage(ChatColor.DARK_BLUE + "[AnimalShop]" + ChatColor.GOLD + " Successfully created AnimalShop!");
                         event.setLine(0, "[AnimalShop]");
+                        MTLocation loc = MTLocation.getMTLocationFromLocation(event.getBlock().getLocation());
+                        if (!plugin.metricshandler.Shop.containsKey(loc)) {
+                            plugin.metricshandler.Shop.put(loc, event.getPlayer().getName());
+                            plugin.Logger("Added Shop to list!", "Debug");
+                        }
                     } else {
+                        if (plugin.debug) {
+                            plugin.Logger("Player " + p.getName() + " has no permission to create AnimalShop!", "Debug");
+                        }
                         event.setCancelled(true);
                     }
                 } else {
@@ -130,7 +144,12 @@ public class ShopPlayerListener implements Listener {
                 if (sign.getLine(0).equalsIgnoreCase("[AnimalShop]")) {
                     String[] line = sign.getLines();
                     if (plugin.blockIsValid(sign, p)) {
-                        if (plugin.permissionsChecker.checkpermissions(p, "AnimalShop.create")) {
+                        if (plugin.PermissionsHandler.checkpermissions(p, "AnimalShop.create")) {
+                            MTLocation loc = MTLocation.getMTLocationFromLocation(sign.getLocation());
+                            if (plugin.metricshandler.Shop.containsKey(loc)) {
+                                plugin.metricshandler.Shop.remove(loc);
+                                plugin.Logger("Removed Shop from list!", "Debug");
+                            }
                             plugin.PlayerLogger(p, "Destroying AnimalShop!", "");
                         } else {
                             event.setCancelled(true);
@@ -144,7 +163,12 @@ public class ShopPlayerListener implements Listener {
 
             if (line[0].equalsIgnoreCase("[AnimalShop]")) {
                 if (this.plugin.blockIsValid(line, p)) {
-                    if (plugin.permissionsChecker.checkpermissions(p, "AnimalShop.create")) {
+                    if (plugin.PermissionsHandler.checkpermissions(p, "AnimalShop.create")) {
+                        MTLocation loc = MTLocation.getMTLocationFromLocation(s.getLocation());
+                        if (plugin.metricshandler.Shop.containsKey(loc)) {
+                            plugin.metricshandler.Shop.remove(loc);
+                            plugin.Logger("Removed Shop from list!", "Debug");
+                        }
                         plugin.PlayerLogger(p, "Destroying AnimalShop!", "");
                     } else {
                         event.setCancelled(true);

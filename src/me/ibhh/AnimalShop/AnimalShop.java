@@ -6,10 +6,7 @@ import org.bukkit.ChatColor;
 import org.bukkit.block.Sign;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
-import org.bukkit.entity.EntityType;
-import org.bukkit.entity.Ocelot;
-import org.bukkit.entity.Player;
-import org.bukkit.entity.Wolf;
+import org.bukkit.entity.*;
 import org.bukkit.plugin.InvalidDescriptionException;
 import org.bukkit.plugin.InvalidPluginException;
 import org.bukkit.plugin.PluginManager;
@@ -25,13 +22,13 @@ public class AnimalShop extends JavaPlugin {
     public Update upd;
     public boolean blacklisted;
     public iConomyHandler MoneyHandler;
-    public PermissionsChecker permissionsChecker;
+    public PermissionsChecker PermissionsHandler;
     public PlayerManager playerManager;
     public Utilities plugman;
-    public Metrics metrics;
     public boolean toggle = true;
     public boolean updateaviable = false;
     public ChatColor Prefix, Text;
+    public MetricsHandler metricshandler;
 
     @Override
     public void onDisable() {
@@ -40,6 +37,7 @@ public class AnimalShop extends JavaPlugin {
         if (getConfig().getBoolean("internet")) {
             UpdateAvailable(Version);
         }
+        metricshandler.saveStatsFiles();
     }
 
     public void forceUpdate() {
@@ -181,7 +179,7 @@ public class AnimalShop extends JavaPlugin {
         }
         ShopListener = new ShopPlayerListener(this);
         MoneyHandler = new iConomyHandler(this);
-        permissionsChecker = new PermissionsChecker(this, "AnimalShop");
+        PermissionsHandler = new PermissionsChecker(this, "AnimalShop");
         upd = new Update(this);
         playerManager = new PlayerManager(this);
         plugman = new Utilities(this);
@@ -212,30 +210,52 @@ public class AnimalShop extends JavaPlugin {
                 Logger("Error on doing update check! Message: " + e.getMessage(), "Error");
                 Logger("may the mainserver is down!", "Error");
             }
+            this.getServer().getScheduler().scheduleAsyncDelayedTask(this, new Runnable() {
+
+                @Override
+                public void run() {
+                    toggle = false;
+                    metricshandler.onStart();
+                }
+            }, 20);
+            metricshandler = new MetricsHandler(this);
+            metricshandler.loadStatsFiles();
+            this.getServer().getScheduler().scheduleAsyncRepeatingTask(this, new Runnable() {
+
+                @Override
+                public void run() {
+                    metricshandler.saveStatsFiles();
+                }
+            }, 200L, 50000L);
         }
         this.getServer().getScheduler().scheduleAsyncRepeatingTask(this, new Runnable() {
 
             @Override
             public void run() {
                 if (getConfig().getBoolean("internet")) {
-                    Logger("Searching update for AnimalShop!", "Debug");
-                    newversion = upd.checkUpdate();
-                    if (newversion == -1) {
-                        newversion = aktuelleVersion();
-                    }
-                    Logger("installed AnimalShop version: " + Version + ", latest version: " + newversion, "Debug");
-                    if (newversion > Version) {
-                        Logger("New version: " + newversion + " found!", "Warning");
-                        Logger("******************************************", "Warning");
-                        Logger("*********** Please update!!!! ************", "Warning");
-                        Logger("* http://ibhh.de/AnimalShop.jar *", "Warning");
-                        Logger("******************************************", "Warning");
-                        updateaviable = true;
-                        if (getConfig().getBoolean("installondownload")) {
-                            install();
+                    try {
+                        Logger("Searching update for AnimalShop!", "Debug");
+                        newversion = upd.checkUpdate();
+                        if (newversion == -1) {
+                            newversion = aktuelleVersion();
                         }
-                    } else {
-                        Logger("No update found!", "Debug");
+                        Logger("installed AnimalShop version: " + Version + ", latest version: " + newversion, "Debug");
+                        if (newversion > Version) {
+                            Logger("New version: " + newversion + " found!", "Warning");
+                            Logger("******************************************", "Warning");
+                            Logger("*********** Please update!!!! ************", "Warning");
+                            Logger("* http://ibhh.de/AnimalShop.jar *", "Warning");
+                            Logger("******************************************", "Warning");
+                            updateaviable = true;
+                            if (getConfig().getBoolean("installondownload")) {
+                                install();
+                            }
+                        } else {
+                            Logger("No update found!", "Debug");
+                        }
+                    } catch (Exception e) {
+                        Logger("Error on doing update check! Message: " + e.getMessage(), "Error");
+                        Logger("may the mainserver is down!", "Error");
                     }
                 }
             }
@@ -247,19 +267,8 @@ public class AnimalShop extends JavaPlugin {
                 toggle = false;
             }
         }, 20);
-        startStatistics();
         System.out.println("[AnimalShop] Version: " + this.Version
                 + " successfully enabled!");
-    }
-
-    private void startStatistics() {
-        try {
-            metrics = new Metrics(this);
-            metrics.enable();
-            metrics.start();
-        } catch (Exception ex) {
-            Logger("There was an error while submitting statistics.", "Error");
-        }
     }
 
     /**
@@ -446,35 +455,36 @@ public class AnimalShop extends JavaPlugin {
 
     public void spawnAnimal(Player p, String Animal) {
         if (Animal.equalsIgnoreCase(getConfig().getString("Sheep." + getConfig().getString("language")))) {
-            p.getWorld().spawnCreature(p.getLocation(), EntityType.SHEEP);
+            p.getWorld().spawn(p.getLocation(), Sheep.class);
         } else if (Animal.equalsIgnoreCase(getConfig().getString("Cow." + getConfig().getString("language")))) {
-            p.getWorld().spawnCreature(p.getLocation(), EntityType.COW);
+            p.getWorld().spawn(p.getLocation(), Cow.class);
         } else if (Animal.equalsIgnoreCase(getConfig().getString("Chicken." + getConfig().getString("language")))) {
-            p.getWorld().spawnCreature(p.getLocation(), EntityType.CHICKEN);
+            p.getWorld().spawn(p.getLocation(), Chicken.class);
         } else if (Animal.equalsIgnoreCase(getConfig().getString("Pig." + getConfig().getString("language")))) {
-            p.getWorld().spawnCreature(p.getLocation(), EntityType.PIG);
+            p.getWorld().spawn(p.getLocation(), Pig.class);
         } else if (Animal.equalsIgnoreCase(getConfig().getString("MushroomCow." + getConfig().getString("language")))) {
-            p.getWorld().spawnCreature(p.getLocation(), EntityType.MUSHROOM_COW);
+            p.getWorld().spawn(p.getLocation(), MushroomCow.class);
         } else if (Animal.equalsIgnoreCase(getConfig().getString("Villager." + getConfig().getString("language")))) {
-            p.getWorld().spawnCreature(p.getLocation(), EntityType.VILLAGER);
+            p.getWorld().spawn(p.getLocation(), Villager.class);
         } else if (Animal.equalsIgnoreCase(getConfig().getString("Wolf." + getConfig().getString("language")))) {
-            Wolf w = (Wolf) p.getWorld().spawnCreature(p.getLocation(), EntityType.WOLF);
+            Wolf w = (Wolf) p.getWorld().spawn(p.getLocation(), Wolf.class);
             w.setOwner(p);
             w.setSitting(false);
+            w.setHealth(20);
         } else if (Animal.equalsIgnoreCase(getConfig().getString("Catred." + getConfig().getString("language")))) {
-            Ocelot w = (Ocelot) p.getWorld().spawnCreature(p.getLocation(), EntityType.OCELOT);
+            Ocelot w = (Ocelot) p.getWorld().spawn(p.getLocation(), Ocelot.class);
             w.setOwner(p);
             w.setCatType(Ocelot.Type.RED_CAT);
         } else if (Animal.equalsIgnoreCase(getConfig().getString("Catblack." + getConfig().getString("language")))) {
-            Ocelot w = (Ocelot) p.getWorld().spawnCreature(p.getLocation(), EntityType.OCELOT);
+            Ocelot w = (Ocelot) p.getWorld().spawn(p.getLocation(), Ocelot.class);
             w.setOwner(p);
             w.setCatType(Ocelot.Type.BLACK_CAT);
         } else if (Animal.equalsIgnoreCase(getConfig().getString("Catsiamese." + getConfig().getString("language")))) {
-            Ocelot w = (Ocelot) p.getWorld().spawnCreature(p.getLocation(), EntityType.OCELOT);
+            Ocelot w = (Ocelot) p.getWorld().spawn(p.getLocation(), Ocelot.class);
             w.setOwner(p);
             w.setCatType(Ocelot.Type.SIAMESE_CAT);
         } else if (Animal.equalsIgnoreCase(getConfig().getString("Catwild." + getConfig().getString("language")))) {
-            Ocelot w = (Ocelot) p.getWorld().spawnCreature(p.getLocation(), EntityType.OCELOT);
+            Ocelot w = (Ocelot) p.getWorld().spawn(p.getLocation(), Ocelot.class);
             w.setOwner(p);
             w.setCatType(Ocelot.Type.WILD_OCELOT);
         }
@@ -504,7 +514,7 @@ public class AnimalShop extends JavaPlugin {
                         System.out.println("[AnimalShop] Debug: args.lenght == 1!");
                     }
                     if (args[0].equalsIgnoreCase("reload")) {
-                        if (permissionsChecker.checkpermissions(player, getConfig().getString("AnimalShop.reload"))) {
+                        if (PermissionsHandler.checkpermissions(player, getConfig().getString("AnimalShop.reload"))) {
                             try {
                                 PlayerLogger(player, "Please wait: Reloading this plugin!", "Warning");
                                 plugman.unloadPlugin("AnimalShop");
@@ -523,7 +533,7 @@ public class AnimalShop extends JavaPlugin {
                         return true;
                     }
                     if (args[0].equalsIgnoreCase("update")) {
-                        if (permissionsChecker.checkpermissions(player, "CommandLogger.update")) {
+                        if (PermissionsHandler.checkpermissions(player, "CommandLogger.update")) {
                             install();
                             return true;
                         }

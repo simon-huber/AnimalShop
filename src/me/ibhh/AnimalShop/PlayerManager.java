@@ -25,8 +25,8 @@ public class PlayerManager {
         }
         try {
             for (Player player : plugin.getServer().getOnlinePlayers()) {
-                if (plugin.permissionsChecker != null) {
-                    if (plugin.permissionsChecker.checkpermissionssilent(player, Permission)) {
+                if (plugin.PermissionsHandler != null) {
+                    if (plugin.PermissionsHandler.checkpermissionssilent(player, Permission)) {
                         if (plugin.getConfig().getBoolean("UsePrefix")) {
                             player.sendMessage(plugin.Prefix + "[AnimalShop] " + plugin.Text + msg);
                         } else {
