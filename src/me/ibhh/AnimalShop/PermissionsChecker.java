@@ -2,6 +2,7 @@ package me.ibhh.AnimalShop;
 
 import de.bananaco.bpermissions.api.util.CalculableType;
 import org.anjocaido.groupmanager.GroupManager;
+import org.anjocaido.groupmanager.dataholder.worlds.WorldsHolder;
 import org.anjocaido.groupmanager.permissions.AnjoPermissionsHandler;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
@@ -23,16 +24,18 @@ public class PermissionsChecker {
         final PluginManager pluginManager = plugin.getServer().getPluginManager();
         final Plugin GMplugin = pluginManager.getPlugin("GroupManager");
 
-        plugin.getServer().getScheduler().scheduleAsyncDelayedTask(plugin, new Runnable() {
-
+        plugin.getServer().getScheduler().runTaskLaterAsynchronously(plugin, new Runnable() {
             @Override
             public void run() {
-                if (GMplugin != null && GMplugin.isEnabled()) {
-                    groupManager = (GroupManager) GMplugin;
-
+                try {
+                    if (GMplugin != null) {
+                        groupManager = (GroupManager) GMplugin;
+                    }
+                    plugin.Logger("checking PermissionsPlugin!", "Debug");
+                    searchpermplugin();
+                } catch (Exception e) {
+                    e.printStackTrace();
                 }
-                plugin.Logger("checking PermissionsPlugin!", "Debug");
-                searchpermplugin();
             }
         }, 0);
     }
@@ -54,7 +57,7 @@ public class PermissionsChecker {
         }
         try {
             plugin.getServer().getServicesManager().getRegistration(de.bananaco.bpermissions.api.util.CalculableType.class);
-            PermPlugin = 3;
+            PermPlugin = 4;
             plugin.Logger("Permissions: Hooked into bPermissions!", "Debug");
             return;
         } catch (NoClassDefFoundError e) {
@@ -72,17 +75,14 @@ public class PermissionsChecker {
             }
             if (PermPlugin == 1) {
                 try {
-                    if (player.hasPermission(action)) {
-                        return true;
-                    }
-                    return false;
+                    return player.hasPermission(action) || player.hasPermission(action.toLowerCase());
                 } catch (Exception e) {
                     e.printStackTrace();
                     return false;
                 }
             } else if (PermPlugin == 2) {
-                if(!Bukkit.getPluginManager().isPluginEnabled("PermissionsEx")){
-                   return false;
+                if (!Bukkit.getPluginManager().isPluginEnabled("PermissionsEx")) {
+                    return false;
                 }
                 try {
                     PermissionUser user = PermissionsEx.getUser(player);;
@@ -99,31 +99,36 @@ public class PermissionsChecker {
                         return false;
                     } catch (Exception e1) {
                         e.printStackTrace();
+                        plugin.Logger("Error on checking Permission with PermissionsEx!", "Error");
+                        plugin.Logger("May the /reload command caused this issue!", "Error");
+                        plugin.Logger("May your permissions.yml is wrong, please check it!", "Error");
+                        plugin.Logger("------------", "Error");
+                        plugin.Logger("If you mean this is an error, use /" + plugin.getName() + " report myissueisthis", "Error");
+                        plugin.Logger("------------", "Error");
                         return false;
                     }
                 }
             } else if (PermPlugin == 3) {
-                if(!Bukkit.getPluginManager().isPluginEnabled("GroupManager")){
-                   return false;
+                if (!Bukkit.getPluginManager().isPluginEnabled("GroupManager") && groupManager != null) {
+                    return false;
                 }
                 try {
-                    final AnjoPermissionsHandler handler = groupManager.getWorldsHolder().getWorldPermissions(player);
-                    {
-                        if (handler != null) {
-                            if (handler.has(player, action)) {
-                                return true;
-                            } else {
-                                return false;
-                            }
-                        }
+                    WorldsHolder holder = groupManager.getWorldsHolder();
+                    if(holder == null) {
+                        return false;
                     }
+                    final AnjoPermissionsHandler handler = holder.getWorldPermissions(player);
+                    if (handler == null) {
+                        return false;
+                    }
+                    return handler.has(player, action);
                 } catch (Exception e) {
                     e.printStackTrace();
                     return false;
                 }
             } else if (PermPlugin == 4) {
-                if(!Bukkit.getPluginManager().isPluginEnabled("bPermissions")){
-                   return false;
+                if (!Bukkit.getPluginManager().isPluginEnabled("bPermissions")) {
+                    return false;
                 }
                 try {
                     if (de.bananaco.bpermissions.api.ApiLayer.hasPermission(player.getWorld().getName(), CalculableType.USER, player.getName(), action)) {
@@ -146,7 +151,6 @@ public class PermissionsChecker {
             e.printStackTrace();
             return false;
         }
-        return false;
     }
 
     public boolean checkpermissions(Player player, String action) {
@@ -185,7 +189,9 @@ public class PermissionsChecker {
                         return false;
                     }
                 } catch (Exception e) {
-                    plugin.Logger("Error on checking permissions with PermissionsEX!", "Error");
+                    if (plugin.getConfig().getBoolean("debug")) {
+                        e.printStackTrace();
+                    }
                     try {
                         PermissionManager permissions = PermissionsEx.getPermissionManager();
 
@@ -196,25 +202,36 @@ public class PermissionsChecker {
                             return false;
                         }
                     } catch (Exception e1) {
+                        plugin.PlayerLogger(player, "Error on checking Permission with PermissionsEx! Please inform an Admin!", "Error");
+                        plugin.Logger("Error on checking Permission with PermissionsEx!", "Error");
+                        plugin.Logger("May the /reload command caused this issue!", "Error");
+                        plugin.Logger("May your permissions.yml is wrong, please check it!", "Error");
+                        plugin.Logger("------------", "Error");
+                        plugin.Logger("If you mean this is an error, use /" + plugin.getName() + " report myissueisthis", "Error");
+                        plugin.Logger("------------", "Error");
                         e.printStackTrace();
                         return false;
                     }
                 }
             } else if (PermPlugin == 3) {
                 if (!Bukkit.getPluginManager().isPluginEnabled("GroupManager")) {
+                    plugin.PlayerLogger(player, "GroupManager is not enabled!", "Error");
                     return false;
                 }
                 try {
-                    final AnjoPermissionsHandler handler = groupManager.getWorldsHolder().getWorldPermissions(player);
-                    {
-                        if (handler != null) {
-                            if (handler.has(player, action)) {
-                                return true;
-                            } else {
-                                plugin.PlayerLogger(player, player.getName() + " " + plugin.getConfig().getString("permissions.error." + plugin.getConfig().getString("language")) + " (" + action + ")", "Error");
-                                return false;
-                            }
-                        }
+                    WorldsHolder holder = groupManager.getWorldsHolder();
+                    if(holder == null) {
+                        return false;
+                    }
+                    final AnjoPermissionsHandler handler = holder.getWorldPermissions(player);
+                    if (handler == null) {
+                        return false;
+                    }
+                    if (handler.has(player, action)) {
+                        return true;
+                    } else {
+                        plugin.PlayerLogger(player, player.getName() + " " + plugin.getConfig().getString("permissions.error." + plugin.getConfig().getString("language")) + " (" + action + ")", "Error");
+                        return false;
                     }
                 } catch (Exception e) {
                     plugin.Logger("Error on checking permissions with GroupManager!", "Error");
@@ -224,6 +241,7 @@ public class PermissionsChecker {
                 }
             } else if (PermPlugin == 4) {
                 if (!Bukkit.getPluginManager().isPluginEnabled("bPermissions")) {
+                    plugin.PlayerLogger(player, "bPermissions is not enabled!", "Error");
                     return false;
                 }
                 try {
@@ -252,6 +270,5 @@ public class PermissionsChecker {
             e.printStackTrace();
             return false;
         }
-        return false;
     }
 }
