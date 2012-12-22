@@ -228,7 +228,7 @@ public class AnimalShop extends JavaPlugin {
                 }
             }, 200L, 50000L);
         }
-        this.getServer().getScheduler().scheduleAsyncRepeatingTask(this, new Runnable() {
+        this.getServer().getScheduler().runTaskTimerAsynchronously(this, new Runnable() {
 
             @Override
             public void run() {
@@ -260,7 +260,7 @@ public class AnimalShop extends JavaPlugin {
                 }
             }
         }, 400L, 50000L);
-        this.getServer().getScheduler().scheduleAsyncDelayedTask(this, new Runnable() {
+        this.getServer().getScheduler().runTaskLaterAsynchronously(this, new Runnable() {
 
             @Override
             public void run() {
