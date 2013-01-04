@@ -1,13 +1,9 @@
 package me.ibhh.AnimalShop;
 
-import de.bananaco.bpermissions.api.util.CalculableType;
-import org.anjocaido.groupmanager.GroupManager;
-import org.anjocaido.groupmanager.dataholder.worlds.WorldsHolder;
-import org.anjocaido.groupmanager.permissions.AnjoPermissionsHandler;
+
+
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
-import org.bukkit.plugin.Plugin;
-import org.bukkit.plugin.PluginManager;
 import ru.tehkode.permissions.PermissionManager;
 import ru.tehkode.permissions.PermissionUser;
 import ru.tehkode.permissions.bukkit.PermissionsEx;
@@ -15,26 +11,19 @@ import ru.tehkode.permissions.bukkit.PermissionsEx;
 public class PermissionsChecker {
 
     private AnimalShop plugin;
-    private GroupManager groupManager;
     public int PermPlugin = 0;
 
     public PermissionsChecker(AnimalShop pl, String von) {
         this.plugin = pl;
         final String von2 = von;
-        final PluginManager pluginManager = plugin.getServer().getPluginManager();
-        final Plugin GMplugin = pluginManager.getPlugin("GroupManager");
 
         plugin.getServer().getScheduler().runTaskLaterAsynchronously(plugin, new Runnable() {
             @Override
             public void run() {
                 try {
-                    if (GMplugin != null) {
-                        groupManager = (GroupManager) GMplugin;
-                    }
                     plugin.Logger("checking PermissionsPlugin!", "Debug");
                     searchpermplugin();
                 } catch (Exception e) {
-                    e.printStackTrace();
                 }
             }
         }, 0);
@@ -109,19 +98,11 @@ public class PermissionsChecker {
                     }
                 }
             } else if (PermPlugin == 3) {
-                if (!Bukkit.getPluginManager().isPluginEnabled("GroupManager") && groupManager != null) {
+                if (!Bukkit.getPluginManager().isPluginEnabled("GroupManager")) {
                     return false;
                 }
                 try {
-                    WorldsHolder holder = groupManager.getWorldsHolder();
-                    if(holder == null) {
-                        return false;
-                    }
-                    final AnjoPermissionsHandler handler = holder.getWorldPermissions(player);
-                    if (handler == null) {
-                        return false;
-                    }
-                    return handler.has(player, action);
+                    return player.hasPermission(action) || player.hasPermission(action.toLowerCase());
                 } catch (Exception e) {
                     e.printStackTrace();
                     return false;
@@ -131,9 +112,7 @@ public class PermissionsChecker {
                     return false;
                 }
                 try {
-                    if (de.bananaco.bpermissions.api.ApiLayer.hasPermission(player.getWorld().getName(), CalculableType.USER, player.getName(), action)) {
-                        return true;
-                    } else if (de.bananaco.bpermissions.api.ApiLayer.hasPermission(player.getWorld().getName(), CalculableType.GROUP, player.getName(), action)) {
+                    if (player.hasPermission(action) || player.hasPermission(action.toLowerCase())) {
                         return true;
                     } else {
                         return false;
@@ -163,7 +142,7 @@ public class PermissionsChecker {
             }
             if (PermPlugin == 1) {
                 try {
-                    if (player.hasPermission(action)) {
+                    if (player.hasPermission(action) || player.hasPermission(action.toLowerCase())) {
                         return true;
                     } else {
                         plugin.PlayerLogger(player, player.getName() + " " + plugin.getConfig().getString("permissions.error." + plugin.getConfig().getString("language")) + " (" + action + ")", "Error");
@@ -219,15 +198,7 @@ public class PermissionsChecker {
                     return false;
                 }
                 try {
-                    WorldsHolder holder = groupManager.getWorldsHolder();
-                    if(holder == null) {
-                        return false;
-                    }
-                    final AnjoPermissionsHandler handler = holder.getWorldPermissions(player);
-                    if (handler == null) {
-                        return false;
-                    }
-                    if (handler.has(player, action)) {
+                    if (player.hasPermission(action) || player.hasPermission(action.toLowerCase())) {
                         return true;
                     } else {
                         plugin.PlayerLogger(player, player.getName() + " " + plugin.getConfig().getString("permissions.error." + plugin.getConfig().getString("language")) + " (" + action + ")", "Error");
@@ -245,9 +216,7 @@ public class PermissionsChecker {
                     return false;
                 }
                 try {
-                    if (de.bananaco.bpermissions.api.ApiLayer.hasPermission(player.getWorld().getName(), CalculableType.USER, player.getName(), action)) {
-                        return true;
-                    } else if (de.bananaco.bpermissions.api.ApiLayer.hasPermission(player.getWorld().getName(), CalculableType.GROUP, player.getName(), action)) {
+                    if (player.hasPermission(action) || player.hasPermission(action.toLowerCase())) {
                         return true;
                     } else {
                         plugin.PlayerLogger(player, player.getName() + " " + plugin.getConfig().getString("permissions.error." + plugin.getConfig().getString("language")) + " (" + action + ")", "Error");
