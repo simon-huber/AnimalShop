@@ -151,18 +151,7 @@ public class MetricsHandler implements Serializable {
             }
         });
         Metrics.Graph Permgraph = metrics.createGraph("PermissionDependencies");
-        String PermName = "None";
-        if (plugin.PermissionsHandler.PermPlugin != 0) {
-            if (plugin.PermissionsHandler.PermPlugin == 1) {
-                PermName = "BukkitPermissions";
-            } else if (plugin.PermissionsHandler.PermPlugin == 2) {
-                PermName = "PermissionsEX";
-            } else if (plugin.PermissionsHandler.PermPlugin == 3) {
-                PermName = "GroupManager";
-            } else if (plugin.PermissionsHandler.PermPlugin == 4) {
-                PermName = "bPermissions";
-            }
-        }
+        String PermName = "BukkitPermissions";
         Permgraph.addPlotter(new Metrics.Plotter(PermName) {
 
             @Override

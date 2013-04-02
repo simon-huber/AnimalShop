@@ -47,7 +47,7 @@ public class AnimalShop extends JavaPlugin {
                     Logger("New version: " + newversion + " found!", "Warning");
                     Logger("******************************************", "Warning");
                     Logger("*********** Please update!!!! ************", "Warning");
-                    Logger("* http://ibhh.de/AnimalShop.jar *", "Warning");
+                    Logger("* http://dev.bukkit.org/server-mods/animalshop *", "Warning");
                     Logger("******************************************", "Warning");
                     if (getConfig().getBoolean("autodownload") || getConfig().getBoolean("installondownload")) {
                         if (getConfig().getBoolean("autodownload")) {
@@ -203,14 +203,14 @@ public class AnimalShop extends JavaPlugin {
                     Logger("New version: " + upd.checkUpdate() + " found!", "Warning");
                     Logger("******************************************", "Warning");
                     Logger("*********** Please update!!!! ************", "Warning");
-                    Logger("* http://ibhh.de/AnimalShop.jar *", "Warning");
+                    Logger("* http://dev.bukkit.org/server-mods/animalshop *", "Warning");
                     Logger("******************************************", "Warning");
                 }
             } catch (Exception e) {
                 Logger("Error on doing update check! Message: " + e.getMessage(), "Error");
                 Logger("may the mainserver is down!", "Error");
             }
-            this.getServer().getScheduler().scheduleAsyncDelayedTask(this, new Runnable() {
+            this.getServer().getScheduler().runTaskLaterAsynchronously(this, new Runnable() {
 
                 @Override
                 public void run() {
@@ -220,7 +220,7 @@ public class AnimalShop extends JavaPlugin {
             }, 20);
             metricshandler = new MetricsHandler(this);
             metricshandler.loadStatsFiles();
-            this.getServer().getScheduler().scheduleAsyncRepeatingTask(this, new Runnable() {
+            this.getServer().getScheduler().runTaskTimerAsynchronously(this, new Runnable() {
 
                 @Override
                 public void run() {
@@ -244,7 +244,7 @@ public class AnimalShop extends JavaPlugin {
                             Logger("New version: " + newversion + " found!", "Warning");
                             Logger("******************************************", "Warning");
                             Logger("*********** Please update!!!! ************", "Warning");
-                            Logger("* http://ibhh.de/AnimalShop.jar *", "Warning");
+                            Logger("* http://dev.bukkit.org/server-mods/animalshop *", "Warning");
                             Logger("******************************************", "Warning");
                             updateaviable = true;
                             if (getConfig().getBoolean("installondownload")) {
