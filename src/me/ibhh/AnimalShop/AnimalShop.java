@@ -17,7 +17,6 @@ public class AnimalShop extends JavaPlugin {
     public float Version = 0;
     public float newversion = 0;
     public static PluginManager pm;
-    private ShopPlayerListener ShopListener;
     public boolean debug;
     public Update upd;
     public boolean blacklisted;
@@ -177,7 +176,7 @@ public class AnimalShop extends JavaPlugin {
         } catch (Exception e) {
             System.out.println("[AnimalShop] Debug: Loading pluginmanager failed!" + e.getMessage());
         }
-        ShopListener = new ShopPlayerListener(this);
+        new ShopPlayerListener(this);
         MoneyHandler = new iConomyHandler(this);
         PermissionsHandler = new PermissionsChecker(this, "AnimalShop");
         upd = new Update(this);
@@ -197,19 +196,6 @@ public class AnimalShop extends JavaPlugin {
             return;
         }
         if (getConfig().getBoolean("internet")) {
-            try {
-                UpdateAvailable(Version);
-                if (updateaviable) {
-                    Logger("New version: " + upd.checkUpdate() + " found!", "Warning");
-                    Logger("******************************************", "Warning");
-                    Logger("*********** Please update!!!! ************", "Warning");
-                    Logger("* http://dev.bukkit.org/server-mods/animalshop *", "Warning");
-                    Logger("******************************************", "Warning");
-                }
-            } catch (Exception e) {
-                Logger("Error on doing update check! Message: " + e.getMessage(), "Error");
-                Logger("may the mainserver is down!", "Error");
-            }
             this.getServer().getScheduler().runTaskLaterAsynchronously(this, new Runnable() {
 
                 @Override
@@ -228,11 +214,12 @@ public class AnimalShop extends JavaPlugin {
                 }
             }, 200L, 50000L);
         }
+        if (getConfig().getBoolean("internet")) {
         this.getServer().getScheduler().runTaskTimerAsynchronously(this, new Runnable() {
 
             @Override
             public void run() {
-                if (getConfig().getBoolean("internet")) {
+               
                     try {
                         Logger("Searching update for AnimalShop!", "Debug");
                         newversion = upd.checkUpdate();
@@ -257,9 +244,9 @@ public class AnimalShop extends JavaPlugin {
                         Logger("Error on doing update check! Message: " + e.getMessage(), "Error");
                         Logger("may the mainserver is down!", "Error");
                     }
-                }
             }
         }, 400L, 50000L);
+        }
         this.getServer().getScheduler().runTaskLaterAsynchronously(this, new Runnable() {
 
             @Override
@@ -565,6 +552,6 @@ public class AnimalShop extends JavaPlugin {
                 System.out.println("[AnimalShop] Debug: Manual download failed!" + e.getMessage());
             }
         }
-        return false;
-    }
+		return false;
+	}
 }

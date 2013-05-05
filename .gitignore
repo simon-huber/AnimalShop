@@ -6,3 +6,5 @@
 /build.xml
 /nb-build.xml
 /lib/
+/.classpath
+/.project

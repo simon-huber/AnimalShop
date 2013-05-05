@@ -78,8 +78,8 @@ public class ShopPlayerListener implements Listener {
                         event.getPlayer().sendMessage(ChatColor.DARK_BLUE + "[AnimalShop]" + ChatColor.GOLD + " Successfully created AnimalShop!");
                         event.setLine(0, "[AnimalShop]");
                         MTLocation loc = MTLocation.getMTLocationFromLocation(event.getBlock().getLocation());
-                        if (!plugin.metricshandler.Shop.containsKey(loc)) {
-                            plugin.metricshandler.Shop.put(loc, event.getPlayer().getName());
+                        if (!MetricsHandler.Shop.containsKey(loc)) {
+                            MetricsHandler.Shop.put(loc, event.getPlayer().getName());
                             plugin.Logger("Added Shop to list!", "Debug");
                         }
                     } else {
@@ -142,12 +142,11 @@ public class ShopPlayerListener implements Listener {
             org.bukkit.block.Sign sign = findSignxp(event.getBlock(), p);
             if (isCorrectSign(sign, event.getBlock())) {
                 if (sign.getLine(0).equalsIgnoreCase("[AnimalShop]")) {
-                    String[] line = sign.getLines();
                     if (plugin.blockIsValid(sign, p)) {
                         if (plugin.PermissionsHandler.checkpermissions(p, "AnimalShop.create")) {
                             MTLocation loc = MTLocation.getMTLocationFromLocation(sign.getLocation());
-                            if (plugin.metricshandler.Shop.containsKey(loc)) {
-                                plugin.metricshandler.Shop.remove(loc);
+                            if (MetricsHandler.Shop.containsKey(loc)) {
+                                MetricsHandler.Shop.remove(loc);
                                 plugin.Logger("Removed Shop from list!", "Debug");
                             }
                             plugin.PlayerLogger(p, "Destroying AnimalShop!", "");
@@ -165,8 +164,8 @@ public class ShopPlayerListener implements Listener {
                 if (this.plugin.blockIsValid(line, p)) {
                     if (plugin.PermissionsHandler.checkpermissions(p, "AnimalShop.create")) {
                         MTLocation loc = MTLocation.getMTLocationFromLocation(s.getLocation());
-                        if (plugin.metricshandler.Shop.containsKey(loc)) {
-                            plugin.metricshandler.Shop.remove(loc);
+                        if (MetricsHandler.Shop.containsKey(loc)) {
+                            MetricsHandler.Shop.remove(loc);
                             plugin.Logger("Removed Shop from list!", "Debug");
                         }
                         plugin.PlayerLogger(p, "Destroying AnimalShop!", "");

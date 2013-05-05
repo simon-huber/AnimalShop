@@ -17,23 +17,17 @@ public class iConomyHandler {
 
     public iConomyHandler(AnimalShop pl) {
         plugin = pl;
-        plugin.aktuelleVersion();
         if (setupEconomy() == true) {
             iConomyversion = 2;
-            if (plugin.getConfig().getBoolean("debug")) {
-                plugin.Logger("hooked into Vault", "");
-            }
+            plugin.Logger("hooked into Vault", "Debug");
         }
-        plugin.getServer().getScheduler().scheduleAsyncDelayedTask(plugin, new Runnable() {
-
+        plugin.getServer().getScheduler().runTaskLaterAsynchronously(plugin, new Runnable() {
             @Override
             public void run() {
-                if (plugin.getConfig().getBoolean("debug")) {
-                    plugin.Logger("checking MoneyPlugin!", "");
-                }
+                plugin.Logger("checking MoneyPlugin!", "Debug");
                 iConomyversion();
             }
-        }, 1);
+        }, 0);
     }
 
     private static boolean packageExists(String[] packages) {
@@ -67,24 +61,16 @@ public class iConomyHandler {
             try {
                 if (packageExists(new String[]{"net.milkbowl.vault.economy.Economy"})) {
                     iConomyversion = 2;
-                    if (plugin.getConfig().getBoolean("debug")) {
-                        plugin.Logger("hooked into Vault", "");
-                    }
+                    plugin.Logger("hooked into Vault", "Debug");
                 } else if (packageExists(new String[]{"com.nijikokun.register.payment.Methods"})) {
                     iConomyversion = 1;
-                    if (plugin.getConfig().getBoolean("debug")) {
-                        plugin.Logger("hooked into Register", "");
-                    }
+                    plugin.Logger("hooked into Register", "Debug");
                 } else if (packageExists(new String[]{"com.iConomy.iConomy", "com.iConomy.system.Account", "com.iConomy.system.Holdings"})) {
                     iConomyversion = 5;
-                    if (plugin.getConfig().getBoolean("debug")) {
-                        plugin.Logger("hooked into iConomy5", "");
-                    }
+                    plugin.Logger("hooked into iConomy5", "Debug");
                 } else if (packageExists(new String[]{"com.iCo6.system.Accounts"})) {
                     iConomyversion = 6;
-                    if (plugin.getConfig().getBoolean("debug")) {
-                        plugin.Logger("hooked into iConomy6", "");
-                    }
+                    plugin.Logger("hooked into iConomy6", "Debug");
                 } else {
                     plugin.Logger("cant hook into iConomy5, iConomy6, Vault or Register. Downloading Vault!", "");
                     plugin.Logger(" ************ Please download and configure Vault!!!!! **********", "Warning");
@@ -134,24 +120,24 @@ public class iConomyHandler {
                 balance = null;
                 return this.balance;
             }
+            return balance;
         }
         if (iConomyversion == 1) {
             try {
-                this.balance =
-                        Double.valueOf(Methods.getMethod().getAccount(name).balance());
+                this.balance = Double.valueOf(Methods.getMethod().getAccount(name).balance());
             } catch (Exception e) {
                 plugin.Logger("No Account! Please report it to an admin!", "Error");
                 e.printStackTrace();
                 this.balance = null;
                 return this.balance;
             }
+            return balance;
         }
         if (iConomyversion == 2) {
             this.balance = economy.getBalance(name);
             return balance;
         }
-
-        return this.balance;
+        return 0;
     }
 
     private com.iConomy.system.Account getAccount5(String name) {

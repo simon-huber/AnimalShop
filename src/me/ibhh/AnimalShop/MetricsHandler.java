@@ -6,14 +6,13 @@ package me.ibhh.AnimalShop;
 
 import java.io.File;
 import java.io.IOException;
-import java.io.Serializable;
 import java.util.HashMap;
 
 /**
  *
- * @author Simon
+ * @author ibhh
  */
-public class MetricsHandler implements Serializable {
+public class MetricsHandler {
 
     private AnimalShop plugin;
     private Metrics metrics;
@@ -163,7 +162,7 @@ public class MetricsHandler implements Serializable {
 
     public int calculateShopQuantity() {
         int a = 0;
-        for (String i : Shop.values()) {
+        for (@SuppressWarnings("unused") String i : Shop.values()) {
             a++;
         }
         return a;
