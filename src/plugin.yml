@@ -1,16 +1,16 @@
-name:  AnimalShop
-version:  2.4
-description:  Player can trade items
-author:  ibhh
-website: http://www.ibhh.de/AnimalShop.jar
-softdepend: [Vault]
-
-main: me.ibhh.AnimalShop.AnimalShop
-
+#Copyright by ibhh (http://ibhh.de)
+name: AnimalShop
+description:  Player can buy animals
+version: 3.0
+author: ibhh
+website: http://ibhh.de
+softdepend: [Multiverse-Cores, Vault]
+main: com.ibhh.animalshop.Main
+database: false
 commands:
-  AnimalShop:
-    description: 
-    usage: /AnimalShop
+  animalshop:
+    description: AnimalShop main Command.
+    usage: /animalshop
 permissions:
   AnimalShop.*:
     description: Gives access to all xpShop commands

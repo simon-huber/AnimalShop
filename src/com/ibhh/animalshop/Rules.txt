@@ -1,0 +1,9 @@
+Starten dann aus der Zone
+Grüne Wolle auf alle Slots unten
+Grun -> Gehen
+Nach X Sekunden gelbe Wolle
+Nach X Sekunden rote Wolle, bei Bewegung zurück zum Start
+Random Zeit einstellbar Grün
+Random Zeit einstellbar Rot / Gelb ca 6 Sek
+
+Drei Gewinner ausgeben!

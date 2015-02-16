@@ -1,56 +1,9 @@
-language: en
-autodownload: true
-installondownload: false
+language: en_CA
 debug: false
-internet: true
+debugfile: true
 UsePrefix: true
+Prefix: AnimalShop
 PrefixColor: b
 TextColor: 6
-buymessage: 
-  de: Woah! Ein(e) %1$s! Sei freundlich zu ihm/ihr!
-  en: Woah! A %1$s! You should befriend it!
-Sheep:
-  de: Schaf
-  en: Sheep
-Cow:
-  de: Kuh
-  en: Cow
-Chicken:
-  de: Huhn
-  en: Chicken
-Pig:
-  de: Schwein
-  en: Pig
-MushroomCow:
-  de: Pilzkuh
-  en: MushroomCow
-Villager:
-  de: Dorfbewohner
-  en: Villager
-Wolf:
-  de: Wolf
-  en: wolf
-Catred:
-  de: rote Katze
-  en: red cat
-Catblack:
-  de: schwarze Katze
-  en: black cat
-Catsiamese:
-  de: siamese Katze
-  en: siamese cat
-Catwild:
-  de: wilde Katze
-  en: wild cat
-permissions:
-  error:
-    de: Houston Wir haben ein Problem! Diesen Befehl darfst Du nicht verwenden!
-    en: Houston we have a problem! You can't use this command!
-  notfound:
-    de: PermissionsEx plugin nicht gefunden!
-    en: PermissionsEx not found!
-permissionserror: Houston we have a problem! You can't use this command!
-iConomy:
-  error:
-    de: Kein iConomy5 oder 6 oder Register gefunden!
-    en: No iConomy5 or 6 or Register found!
+checkforupdate: true
+autodownloadandinstall: true
