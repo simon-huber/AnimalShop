@@ -12,6 +12,7 @@ import org.bukkit.plugin.java.JavaPlugin;
 import com.ibhh.animalshop.exception.SignNotValidException;
 import com.ibhh.animalshop.update.Updater;
 import com.ibhh.animalshop.update.Updater.UpdateResult;
+import com.ibhh.animalshop.utilities.AnimalShopTabCompleter;
 import com.ibhh.animalshop.utilities.MoneyHandler;
 import com.ibhh.animalshop.utilities.PermissionsUtility;
 import com.ibhh.animalshop.utilities.ShopPlayerListener;
@@ -124,6 +125,7 @@ public class Main extends JavaPlugin
 		this.getCommand("animalshop").setExecutor(commands);
 		/* Eventregistrierung */
 		listener = new ShopPlayerListener(this);
+		getCommand("animalshop").setTabCompleter(new AnimalShopTabCompleter(this));
 		getLoggerUtility().log("AnimalShop loaded", LoggerLevel.INFO);
 	}
 

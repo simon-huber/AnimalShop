@@ -53,6 +53,14 @@ public class Locale_en_CA extends PluginLocale implements PredefinedLocale
 		addDefault("help.commandsallowed", "You are allowed to run following commands:");
 		addDefault("permission.error", "we have a problem! You musnt do this!");
 		
+		addDefault("money.notenough", "You haven't got enough money!");
+		addDefault("money.purchased", "You paid %d.");
+		addDefault("money.purchased2", "Woah! A %s. You should befriend it!");
+		
+		addDefault("sign.created", "AnimalShop created!");
+		addDefault("sign.failed", "Creation failed!");
+
+		addDefault("sign.notvalid.general", "Wrong syntax: [AnimalShop] -> price -> animalname -> arguments");
 		addDefault("sign.notvalid.firstline", "The first line must contain \"AnimalShop\"!");
 		addDefault("sign.notvalid.secondline", "The second line must contain a number!");
 		addDefault("sign.notvalid.thirdline", "The third line must be an animal! Possible: ");

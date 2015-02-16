@@ -53,7 +53,15 @@ public class Locale_de_BY extends PluginLocale implements PredefinedLocale
 		addDefault("help.head", "AnimalShop Hilfe");
 		addDefault("help.commandsallowed", "Diese Befehle derfst machn:");
 		addDefault("permission.error", "hey du derfst das ned!");
+		
+		addDefault("money.notenough", "Du hast nicht genug Geld!");
+		addDefault("money.purchased", "Du hast %d bezahlt.");
+		addDefault("money.purchased2", "Woah! Ein(e) %s! Sei freundlich zu ihm/ihr!");
+		
+		addDefault("sign.created", "AnimalShop erstellt!");
+		addDefault("sign.failed", "Erstellung fehlgeschlagen!");
 
+		addDefault("sign.notvalid.general", "Flasche Syntax: AnimalShop -> Preis -> Animalname -> Arguments");
 		addDefault("sign.notvalid.firstline", "Die erste Zeile muss \"AnimalShop\" enthalten!");
 		addDefault("sign.notvalid.secondline", "Die zweite Zeile muss eine Ganzzahl enthalten!");
 		addDefault("sign.notvalid.thirdline", "Die dritte Zeile muss den Tiernamen enthalten! Animals: ");

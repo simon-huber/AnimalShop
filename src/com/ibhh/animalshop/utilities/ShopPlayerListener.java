@@ -1,6 +1,5 @@
 package com.ibhh.animalshop.utilities;
 
-import org.bukkit.ChatColor;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.block.Sign;
@@ -55,10 +54,12 @@ public class ShopPlayerListener implements Listener
 								plugin.getMoneyHandler().substract(price, p);
 								plugin.getMetricshandler().AnimalShopSignBuy++;
 								plugin.spawnAnimal(p, Animal, line[3]);
+								plugin.getLoggerUtility().log(p, String.format(plugin.getConfigHandler().getLanguageString(p, "money.purchased"), (int) price), LoggerLevel.INFO);
+								plugin.getLoggerUtility().log(p, String.format(plugin.getConfigHandler().getLanguageString(p, "money.purchased2"), plugin.getConfigHandler().getLanguageString(p, "animal." + plugin.getAnimalSpawnHandler().getSystemNameofAnimal(Animal) + ".name")), LoggerLevel.INFO);
 							}
 							else
 							{
-								p.sendMessage(ChatColor.DARK_BLUE + "[AnimalShop]" + ChatColor.GOLD + "You havent enough money!");
+								plugin.getLoggerUtility().log(p, plugin.getConfigHandler().getLanguageString(p, "money.notenough"), LoggerLevel.ERROR);
 							}
 						}
 						catch(NoiConomyPluginFound e)
@@ -66,7 +67,7 @@ public class ShopPlayerListener implements Listener
 							plugin.getLoggerUtility().log(event.getPlayer(), e.getMessage(), LoggerLevel.ERROR);
 						}
 					} else {
-						p.sendMessage(ChatColor.DARK_BLUE + "[AnimalShop]" + ChatColor.GOLD + "Block not valid!");
+						plugin.getLoggerUtility().log(p, plugin.getConfigHandler().getLanguageString(p, "sign.notvalid.general"), LoggerLevel.ERROR);
 					}
 				}
 			}
@@ -106,7 +107,7 @@ public class ShopPlayerListener implements Listener
 					String[] line = event.getLines();
 					if(plugin.blockIsValid(line, p))
 					{
-						event.getPlayer().sendMessage(ChatColor.DARK_BLUE + "[AnimalShop]" + ChatColor.GOLD + " Successfully created AnimalShop!");
+						plugin.getLoggerUtility().log(p, plugin.getConfigHandler().getLanguageString(p, "sign.created"), LoggerLevel.INFO);
 						event.setLine(0, "[AnimalShop]");
 						MTLocation loc = MTLocation.getMTLocationFromLocation(event.getBlock().getLocation());
 						if(!MetricsHandler.Shop.containsKey(loc))
@@ -116,7 +117,7 @@ public class ShopPlayerListener implements Listener
 					}
 					else
 					{
-						event.getPlayer().sendMessage(ChatColor.DARK_BLUE + "[AnimalShop]" + ChatColor.GOLD + "AnimalShop creation failed! Wrong Syntax!");
+						plugin.getLoggerUtility().log(p, plugin.getConfigHandler().getLanguageString(p, "sign.failed"), LoggerLevel.ERROR);
 						event.setCancelled(true);
 					}
 				}
@@ -129,7 +130,7 @@ public class ShopPlayerListener implements Listener
 			{
 				e.printStackTrace();
 				event.setCancelled(true);
-				event.getPlayer().sendMessage(ChatColor.DARK_BLUE + "[AnimalShop]" + ChatColor.GOLD + "AnimalShop creation failed!");
+				plugin.getLoggerUtility().log(p, plugin.getConfigHandler().getLanguageString(p, "sign.failed"), LoggerLevel.ERROR);
 			}
 		}
 	}
