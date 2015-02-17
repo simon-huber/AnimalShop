@@ -1,5 +1,5 @@
 /*
- * Copyright by Miny & Ibhh (http://desch.ch, http://ibhh.de)
+ * Copyright by ibhh (http://ibhh.de)
  * Removing this will result in a Copyright Punishment!
  */
 
