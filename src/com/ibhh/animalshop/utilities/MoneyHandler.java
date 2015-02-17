@@ -2,7 +2,9 @@ package com.ibhh.animalshop.utilities;
 
 import com.iCo6.system.Accounts;
 import com.iConomy.iConomy;
+import com.ibhh.animalshop.AnimalShop;
 import com.ibhh.animalshop.exception.NoiConomyPluginFound;
+import com.ibhh.animalshop.utilities.logger.LoggerLevel;
 import com.nijikokun.register.payment.Methods;
 
 import net.milkbowl.vault.economy.Economy;
@@ -26,14 +28,14 @@ public class MoneyHandler
 		if(setupEconomy() == true)
 		{
 			iConomyversion = 2;
-			plugin.getLogger().info("hooked into Vault");
+			AnimalShop.getLoggerUtility().log("hooked into Vault", LoggerLevel.DEBUG);
 		}
 		plugin.getServer().getScheduler().runTask(plugin, new Runnable()
 		{
 			@Override
 			public void run()
 			{
-				plugin.getLogger().fine("checking MoneyPlugin!");
+				AnimalShop.getLoggerUtility().log("Checking for an installed iConomy plugin", LoggerLevel.DEBUG);
 				iConomyversion();
 			}
 		});
@@ -84,22 +86,22 @@ public class MoneyHandler
 				if(packageExists(new String[] {"net.milkbowl.vault.economy.Economy"}))
 				{
 					iConomyversion = 2;
-					plugin.getLogger().info("hooked into Vault");
+					AnimalShop.getLoggerUtility().log("hooked into Vault", LoggerLevel.DEBUG);
 				}
 				else if(packageExists(new String[] {"com.nijikokun.register.payment.Methods"}))
 				{
 					iConomyversion = 1;
-					plugin.getLogger().info("hooked into Register");
+					AnimalShop.getLoggerUtility().log("hooked into Register", LoggerLevel.DEBUG);
 				}
 				else if(packageExists(new String[] {"com.iConomy.iConomy", "com.iConomy.system.Account", "com.iConomy.system.Holdings"}))
 				{
 					iConomyversion = 5;
-					plugin.getLogger().info("hooked into iConomy5");
+					AnimalShop.getLoggerUtility().log("hooked into iConomy5", LoggerLevel.DEBUG);
 				}
 				else if(packageExists(new String[] {"com.iCo6.system.Accounts"}))
 				{
 					iConomyversion = 6;
-					plugin.getLogger().info("hooked into iConomy6");
+					AnimalShop.getLoggerUtility().log("hooked into iConomy6", LoggerLevel.DEBUG);
 				}
 				else
 				{
@@ -112,6 +114,7 @@ public class MoneyHandler
 				E.printStackTrace();
 				iConomyversion = 0;
 			}
+			AnimalShop.getLoggerUtility().log("Finished check for iConomy plugin: using " + iConomyversion, LoggerLevel.DEBUG);
 			return iConomyversion;
 		}
 		else
@@ -248,6 +251,8 @@ public class MoneyHandler
 				e.printStackTrace();
 			}
 		}
+		AnimalShop.getLoggerUtility().log("Substracted from " + name + ": " + amountsubstract, LoggerLevel.DEBUG);
+
 	}
 
 	public void substract(double amountsubstract, Player player)
@@ -308,11 +313,14 @@ public class MoneyHandler
 				e.printStackTrace();
 			}
 		}
+		AnimalShop.getLoggerUtility().log("Added to " + name + ": " + amountadd, LoggerLevel.DEBUG);
+
 	}
 
 	private void errorSubstract()
 	{
 		plugin.getLogger().severe("Cant substract money! Does account exist?");
+		AnimalShop.getLoggerUtility().log("Error iConomy", LoggerLevel.DEBUG);
 	}
 
 	public void addmoney(double amountadd, Player player)

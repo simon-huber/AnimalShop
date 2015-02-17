@@ -12,7 +12,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 
-import com.ibhh.animalshop.Main;
+import com.ibhh.animalshop.AnimalShop;
 
 /**
  * @author ibhh
@@ -20,29 +20,26 @@ import com.ibhh.animalshop.Main;
 public class LoggerUtility
 {
 
-	private final Main plugin;
-	private final boolean debugfile;
-	private final boolean debug;
-	private final String Prefix;
-	private final boolean usePrefix;
-	public ChatColor PrefixColor,
-			TextColor;
-
-
-	public LoggerUtility(Main plugin)
-	{
-		this.plugin = plugin;
-		debugfile = plugin.getConfigHandler().getConfig().getBoolean("debugfile");
-		debug = plugin.getConfigHandler().getConfig().getBoolean("debug");
-		Prefix = plugin.getConfigHandler().getConfig().getString("Prefix");
-		usePrefix = plugin.getConfigHandler().getConfig().getBoolean("UsePrefix");
+	private boolean debugfile = false;
+	private boolean debug = false;
+	private String Prefix = "";
+	private boolean usePrefix = false;
+	public ChatColor PrefixColor = ChatColor.WHITE,
+			TextColor = ChatColor.WHITE;
+	
+	public void loadConfigs() {
+		debugfile = AnimalShop.getConfigHandler().getConfig().getBoolean("debugfile");
+		debug = AnimalShop.getConfigHandler().getConfig().getBoolean("debug");
+		Prefix = AnimalShop.getConfigHandler().getConfig().getString("Prefix");
+		usePrefix = AnimalShop.getConfigHandler().getConfig().getBoolean("UsePrefix");
 		loadcolors();
 	}
 
 	private void loadcolors()
 	{
-		PrefixColor = ChatColor.getByChar(plugin.getConfigHandler().getConfig().getString("PrefixColor"));
-		TextColor = ChatColor.getByChar(plugin.getConfigHandler().getConfig().getString("TextColor"));
+		PrefixColor = ChatColor.getByChar(AnimalShop.getConfigHandler().getConfig().getString("PrefixColor"));
+		TextColor = ChatColor.getByChar(AnimalShop.getConfigHandler().getConfig().getString("TextColor"));
+		AnimalShop.getLoggerUtility().log("Colors loaded", LoggerLevel.DEBUG);
 	}
 
 	public void log(String msg, LoggerLevel TYPE)
@@ -51,8 +48,8 @@ public class LoggerUtility
 		{
 			if(TYPE.equals(LoggerLevel.WARNING) || TYPE.equals(LoggerLevel.SEVERE))
 			{
-				System.err.println("[" + plugin.getName() + "] " + TYPE.name() + ": " + msg);
-				Bukkit.broadcast(PrefixColor + "[" + Prefix + "]" + ChatColor.RED + " " + TYPE.name() + ": " + TextColor + msg, "CurveCraft.log");
+				System.err.println("[" + Prefix + "] " + TYPE.name() + ": " + msg);
+				Bukkit.broadcast(PrefixColor + "[" + Prefix + "]" + ChatColor.RED + " " + TYPE.name() + ": " + TextColor + msg, "AnimalShop.log");
 				if(debugfile)
 				{
 					this.log("Error: " + msg);
@@ -63,7 +60,7 @@ public class LoggerUtility
 				if(debug)
 				{
 					System.out.println("[" + Prefix + "]" + " Debug: " + msg);
-					Bukkit.broadcast(PrefixColor + "[" + Prefix + "]" + " Debug: " + TextColor + msg, "CurveCraft.log");
+					Bukkit.broadcast(PrefixColor + "[" + Prefix + "]" + " Debug: " + TextColor + msg, "AnimalShop.log");
 				}
 				if(debugfile)
 				{
@@ -73,7 +70,7 @@ public class LoggerUtility
 			else
 			{
 				System.out.println("[" + Prefix + "]" + " " + msg);
-				Bukkit.broadcast(PrefixColor + "[" + Prefix + "]" + " " + TextColor + msg, "CurveCraft.log");
+				Bukkit.broadcast(PrefixColor + "[" + Prefix + "]" + " " + TextColor + msg, "AnimalShop.log");
 				if(debugfile)
 				{
 					this.log(msg);
@@ -135,7 +132,7 @@ public class LoggerUtility
 		catch(Exception e)
 		{
 			e.printStackTrace();
-			System.out.println("[CurveCraft] Error: Uncatch Exeption!");
+			System.out.println("[AnimalShop] Error: Uncatch Exeption!");
 		}
 	}
 
@@ -143,7 +140,7 @@ public class LoggerUtility
 	{
 		Date now = new Date();
 		String Stream = now.toString();
-		String path = plugin.getDataFolder().toString() + File.separator + "debugfiles" + File.separator;
+		String path = AnimalShop.getPluginDataFolder().toString() + File.separator + "debugfiles" + File.separator;
 		File directory = new File(path);
 		directory.mkdirs();
 		SimpleDateFormat ft = new SimpleDateFormat("yyyy-MM-dd 'at' HH");

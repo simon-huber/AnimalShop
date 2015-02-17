@@ -23,16 +23,13 @@ import com.ibhh.animalshop.utilities.logger.LoggerLevel;
 
 public class Commands implements CommandExecutor
 {
+	public static final String[] commands = new String[] {"changelanguage", "languagelist", "resetlanguage"};
 
-	private Main plugin;
-	public String[] commands = new String[] {"changelanguage", "languagelist", "resetlanguage"};
-
-	public Commands(Main plugin)
+	public Commands()
 	{
-		this.plugin = plugin;
 	}
 
-	public String[] getCommands()
+	public static String[] getCommands()
 	{
 		return commands;
 	}
@@ -46,7 +43,7 @@ public class Commands implements CommandExecutor
 
 			if(args.length == 2)
 			{
-				if(args[0].equalsIgnoreCase(plugin.getConfigHandler().getLanguageString(player, "commands.changelanguage.name")) || args[0].equalsIgnoreCase(plugin.getConfigHandler().getLanguageString("system", "commands.changelanguage.name")))
+				if(args[0].equalsIgnoreCase(AnimalShop.getConfigHandler().getLanguageString(player, "commands.changelanguage.name")) || args[0].equalsIgnoreCase(AnimalShop.getConfigHandler().getLanguageString("system", "commands.changelanguage.name")))
 				{
 					return executeCommandChangeLanguage(player, args);
 				}
@@ -55,17 +52,17 @@ public class Commands implements CommandExecutor
 			{
 				/* Language List Command /wr languagelist */
 
-				if(args[0].equalsIgnoreCase(plugin.getConfigHandler().getLanguageString(player, "commands.languagelist.name")) || args[0].equalsIgnoreCase(plugin.getConfigHandler().getLanguageString("system", "commands.languagelist.name")))
+				if(args[0].equalsIgnoreCase(AnimalShop.getConfigHandler().getLanguageString(player, "commands.languagelist.name")) || args[0].equalsIgnoreCase(AnimalShop.getConfigHandler().getLanguageString("system", "commands.languagelist.name")))
 				{
 					return executeCommandLanguageList(player, args);
 				}
 				
-				if(args[0].equalsIgnoreCase(plugin.getConfigHandler().getLanguageString(player, "commands.resetlanguage.name")) || args[0].equalsIgnoreCase(plugin.getConfigHandler().getLanguageString("system", "commands.resetlanguage.name")))
+				if(args[0].equalsIgnoreCase(AnimalShop.getConfigHandler().getLanguageString(player, "commands.resetlanguage.name")) || args[0].equalsIgnoreCase(AnimalShop.getConfigHandler().getLanguageString("system", "commands.resetlanguage.name")))
 				{
 					return executeCommandResetLanguage(player, args);
 				}
 			}
-			plugin.getHelp().help(player, args);
+			Help.help(player, args);
 			return true;
 		}
 		else
@@ -77,16 +74,16 @@ public class Commands implements CommandExecutor
 
 	private boolean executeCommandLanguageList(Player player, String... args)
 	{
-		if(plugin.getPermissionsUtility().checkpermissions(player, plugin.getConfigHandler().getLanguageString(player, "commands.languagelist.permission", false)))
+		if(AnimalShop.getPermissionsUtility().checkpermissions(player, AnimalShop.getConfigHandler().getLanguageString(player, "commands.languagelist.permission", false)))
 		{
-			plugin.getLoggerUtility().log(player, ChatColor.GREEN + plugin.getConfigHandler().getLanguageString(player, "configuration.language.list"), LoggerLevel.INFO);
-			plugin.getLoggerUtility().log(player, ChatColor.GREEN + plugin.getConfigHandler().getLanguageString(player, "commands.changelanguage.usage"), LoggerLevel.INFO);
+			AnimalShop.getLoggerUtility().log(player, ChatColor.GREEN + AnimalShop.getConfigHandler().getLanguageString(player, "configuration.language.list"), LoggerLevel.INFO);
+			AnimalShop.getLoggerUtility().log(player, ChatColor.GREEN + AnimalShop.getConfigHandler().getLanguageString(player, "commands.changelanguage.usage"), LoggerLevel.INFO);
 
-			for(PluginLocale file : plugin.getConfigHandler().getLanguage_configs().values())
+			for(PluginLocale file : AnimalShop.getConfigHandler().getLanguage_configs().values())
 			{
 				try
 				{
-					TellRaw.sendRawMessage(player, JSONManager.getJSONTellRaw(file.getLocaleName() + " (" + file.getCode() + ")", true, false, true, false, false, RawColor.green, ClickEvent.run_command, "/animalshop " + plugin.getConfigHandler().getLanguageString("system", "commands.changelanguage.name") + " " + file.getCode(), HoverEvent.show_text, plugin.getConfigHandler().getLanguageString(player, "configuration.language.listhover")));
+					TellRaw.sendRawMessage(player, JSONManager.getJSONTellRaw(file.getLocaleName() + " (" + file.getCode() + ")", true, false, true, false, false, RawColor.green, ClickEvent.run_command, "/animalshop " + AnimalShop.getConfigHandler().getLanguageString("system", "commands.changelanguage.name") + " " + file.getCode(), HoverEvent.show_text, AnimalShop.getConfigHandler().getLanguageString(player, "configuration.language.listhover")));
 					player.sendMessage("");
 				}
 				catch(Exception e)
@@ -96,7 +93,7 @@ public class Commands implements CommandExecutor
 			}
 			try
 			{
-				TellRaw.sendRawMessage(player, JSONManager.getJSONTellRaw(plugin.getConfigHandler().getLanguageString(player, "commands.resetlanguage.return"), true, false, true, false, false, RawColor.green, ClickEvent.run_command, "/animalshop " + plugin.getConfigHandler().getLanguageString("system", "commands.resetlanguage.name"), HoverEvent.show_text, plugin.getConfigHandler().getLanguageString(player, "configuration.language.listhover")));
+				TellRaw.sendRawMessage(player, JSONManager.getJSONTellRaw(AnimalShop.getConfigHandler().getLanguageString(player, "commands.resetlanguage.return"), true, false, true, false, false, RawColor.green, ClickEvent.run_command, "/animalshop " + AnimalShop.getConfigHandler().getLanguageString("system", "commands.resetlanguage.name"), HoverEvent.show_text, AnimalShop.getConfigHandler().getLanguageString(player, "configuration.language.listhover")));
 			}
 			catch(Exception e)
 			{
@@ -109,12 +106,12 @@ public class Commands implements CommandExecutor
 	
 	private boolean executeCommandResetLanguage(Player player, String... args)
 	{
-		if(plugin.getPermissionsUtility().checkpermissions(player, plugin.getConfigHandler().getLanguageString(player, "commands.resetlanguage.permission", false)))
+		if(AnimalShop.getPermissionsUtility().checkpermissions(player, AnimalShop.getConfigHandler().getLanguageString(player, "commands.resetlanguage.permission", false)))
 		{
 			try
 			{
-				plugin.getConfigHandler().setPlayerLanguage(player, "default");
-				plugin.getLoggerUtility().log(player, plugin.getConfigHandler().getLanguageString(player, "commands.resetlanguage.return"), LoggerLevel.INFO);
+				AnimalShop.getConfigHandler().setPlayerLanguage(player, "default");
+				AnimalShop.getLoggerUtility().log(player, AnimalShop.getConfigHandler().getLanguageString(player, "commands.resetlanguage.return"), LoggerLevel.INFO);
 			}
 			catch(IOException e)
 			{
@@ -132,24 +129,24 @@ public class Commands implements CommandExecutor
 	 */
 	private boolean executeCommandChangeLanguage(Player player, String... args)
 	{
-		if(plugin.getPermissionsUtility().checkpermissions(player, plugin.getConfigHandler().getLanguageString(player, "commands.changelanguage.permission", false)))
+		if(AnimalShop.getPermissionsUtility().checkpermissions(player, AnimalShop.getConfigHandler().getLanguageString(player, "commands.changelanguage.permission", false)))
 		{
 			try
 			{
-				plugin.getConfigHandler().setPlayerLanguage(player, args[1]);
+				AnimalShop.getConfigHandler().setPlayerLanguage(player, args[1]);
 			}
 			catch(IllegalArgumentException e)
 			{
-				plugin.getLoggerUtility().log(player, e.getMessage(), LoggerLevel.ERROR);
+				AnimalShop.getLoggerUtility().log(player, e.getMessage(), LoggerLevel.ERROR);
 				return true;
 			}
 			catch(IOException e)
 			{
 				e.printStackTrace();
-				plugin.getLoggerUtility().log(player, e.getMessage(), LoggerLevel.ERROR);
+				AnimalShop.getLoggerUtility().log(player, e.getMessage(), LoggerLevel.ERROR);
 				return true;
 			}
-			plugin.getLoggerUtility().log(player, plugin.getConfigHandler().getLanguageString(player, "commands.changelanguage.return"), LoggerLevel.INFO);
+			AnimalShop.getLoggerUtility().log(player, AnimalShop.getConfigHandler().getLanguageString(player, "commands.changelanguage.return"), LoggerLevel.INFO);
 		}
 		return true;
 	}

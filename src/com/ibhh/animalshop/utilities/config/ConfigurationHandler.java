@@ -1,15 +1,13 @@
 package com.ibhh.animalshop.utilities.config;
 
-import java.io.File;
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 
 import org.bukkit.ChatColor;
 import org.bukkit.configuration.file.FileConfiguration;
-import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
 
-import com.ibhh.animalshop.Main;
+import com.ibhh.animalshop.AnimalShop;
 import com.ibhh.animalshop.locales.LocaleHandler;
 import com.ibhh.animalshop.locales.Localizer;
 import com.ibhh.animalshop.locales.PluginLocale;
@@ -21,43 +19,25 @@ import com.ibhh.animalshop.utilities.logger.LoggerLevel;
 public class ConfigurationHandler
 {
 	private LocaleHandler language_configs;
-	private final Main plugin;
-	// ConfigFile
-	public File arenaconfigFile;
-	public FileConfiguration arenaconfig;
+	private FileConfiguration pluginconfig;
 
-	/**
-	 * Creates a new ConfigurationHandler
-	 * @param plugin Needed for saving configs
-	 */
-	public ConfigurationHandler(Main plugin)
+	public void init(AnimalShop plugin)
 	{
-		this.plugin = plugin;
 		// loading main arenaconfig
 		try
 		{
 			plugin.getConfig().options().copyDefaults(true);
 			plugin.saveConfig();
 			plugin.reloadConfig();
+			pluginconfig = plugin.getConfig();
 		}
 		catch(Exception e)
 		{
-			System.out.println("Cannot create arenaconfig!");
+			System.out.println("Cannot create config!");
 			e.printStackTrace();
 		}
-		language_configs = new LocaleHandler(plugin);
-		arenaconfigFile = new File(this.plugin.getDataFolder(), "arena_config.yml");
-		arenaconfig = YamlConfiguration.loadConfiguration(arenaconfigFile);
-	}
-
-	public FileConfiguration getArenaconfig()
-	{
-		return arenaconfig;
-	}
-
-	public File getArenaconfigFile()
-	{
-		return arenaconfigFile;
+		AnimalShop.getLoggerUtility().loadConfigs();
+		language_configs = new LocaleHandler();
 	}
 
 	public LocaleHandler getLanguage_configs()
@@ -112,7 +92,7 @@ public class ConfigurationHandler
 			if(config.getString(path) == null)
 			{
 				ret += ChatColor.RED + "ERROR: ";
-				plugin.getLoggerUtility().log("arenaconfig.getLanguageString(type, path) == null because path " + path + " type: " + type, LoggerLevel.DEBUG);
+				AnimalShop.getLoggerUtility().log("arenaconfig.getLanguageString(type, path) == null because path " + path + " type: " + type, LoggerLevel.DEBUG);
 				PluginLocale config_sys = getLanguage_config("system");
 				if(config_sys != null && config.getString(path) != null)
 				{
@@ -133,11 +113,11 @@ public class ConfigurationHandler
 	}
 
 	/**
-	 * @return plugin.getConifg();
+	 * @return plugin.getConfig();
 	 */
 	public FileConfiguration getConfig()
 	{
-		return plugin.getConfig();
+		return pluginconfig;
 	}
 
 	public void setPlayerLanguage(Player p, String language) throws IOException
@@ -156,6 +136,8 @@ public class ConfigurationHandler
 		{
 			throw new IllegalArgumentException(String.format(getLanguageString(p, "configuration.language.languagenotfound"), language));
 		}
+		AnimalShop.getLoggerUtility().log("The language of " + p.getName() + "(" + p.getUniqueId() + ") was set to " + language, LoggerLevel.DEBUG);
+
 	}
 
 	public String getPlayerLanguage(Player p)
@@ -175,7 +157,7 @@ public class ConfigurationHandler
 		{
 			try
 			{
-				plugin.getLoggerUtility().log("Player " + p.getName() + " has locale: en_CA because LOCALE not found: " + locale.getCode() + " Read: " + Localizer.getLanguage(p), LoggerLevel.DEBUG);
+				AnimalShop.getLoggerUtility().log("Player " + p.getName() + " has locale: en_CA because LOCALE not found: " + locale.getCode() + " Read: " + Localizer.getLanguage(p), LoggerLevel.DEBUG);
 			}
 			catch(NoSuchFieldException | SecurityException | IllegalAccessException | IllegalArgumentException | InvocationTargetException e)
 			{

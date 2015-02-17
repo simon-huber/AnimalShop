@@ -6,31 +6,29 @@ import java.util.Iterator;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Player;
 
-import com.ibhh.animalshop.Main;
+import com.ibhh.animalshop.AnimalShop;
 import com.ibhh.animalshop.exception.SignNotValidException;
 
-public class AnimalSpawnHandler
+public class AnimalSpawnHandler extends ArrayList<AnimalSpawner>
 {
-	private ArrayList<AnimalSpawner> spawner = new ArrayList<AnimalSpawner>();
-	private final Main plugin;
+	private static final long serialVersionUID = 1L;
 
-	public AnimalSpawnHandler(Main plugin)
+	public AnimalSpawnHandler()
 	{
-		this.plugin = plugin;
-		spawner.add(new SheepSpawner(plugin));
-		spawner.add(new CowSpawner(plugin));
-		spawner.add(new MushroomCowSpawner(plugin));
-		spawner.add(new PigSpawner(plugin));
-		spawner.add(new VillagerSpawner(plugin));
-		spawner.add(new WolfSpawner(plugin));
-		spawner.add(new CatSpawner(plugin));
-		spawner.add(new HorseSpawner(plugin));
-		spawner.add(new RabbitSpawner(plugin));
+		add(new SheepSpawner());
+		add(new CowSpawner());
+		add(new MushroomCowSpawner());
+		add(new PigSpawner());
+		add(new VillagerSpawner());
+		add(new WolfSpawner());
+		add(new CatSpawner());
+		add(new HorseSpawner());
+		add(new RabbitSpawner());
 	}
 
 	public boolean spawnAnimal(String animal, String args, Player p)
 	{
-		for(Iterator<AnimalSpawner> iterator = spawner.iterator(); iterator.hasNext();)
+		for(Iterator<AnimalSpawner> iterator = iterator(); iterator.hasNext();)
 		{
 			AnimalSpawner animalSpawner = (AnimalSpawner) iterator.next();
 			if(animalSpawner.getIdetifier().equalsIgnoreCase(animal))
@@ -45,7 +43,7 @@ public class AnimalSpawnHandler
 	{
 		if(!s[0].toLowerCase().contains("animalshop"))
 		{
-			throw new SignNotValidException(plugin.getConfigHandler().getLanguageString("system", "sign.notvalid.firstline"));
+			throw new SignNotValidException(AnimalShop.getConfigHandler().getLanguageString("system", "sign.notvalid.firstline"));
 		}
 		try
 		{
@@ -53,17 +51,17 @@ public class AnimalSpawnHandler
 		}
 		catch(Exception e)
 		{
-			throw new SignNotValidException(plugin.getConfigHandler().getLanguageString("system", "sign.notvalid.secondline"));
+			throw new SignNotValidException(AnimalShop.getConfigHandler().getLanguageString("system", "sign.notvalid.secondline"));
 		}
 		if(!animalNameValid(s[2]))
 		{
 			String animals = "";
-			for(Iterator<AnimalSpawner> iterator = spawner.iterator(); iterator.hasNext();)
+			for(Iterator<AnimalSpawner> iterator = iterator(); iterator.hasNext();)
 			{
 				AnimalSpawner animalSpawner = (AnimalSpawner) iterator.next();
 				animals += animalSpawner.getIdetifier() + ", ";
 			}
-			throw new SignNotValidException(plugin.getConfigHandler().getLanguageString("system", "sign.notvalid.thirdline") + animals);
+			throw new SignNotValidException(AnimalShop.getConfigHandler().getLanguageString("system", "sign.notvalid.thirdline") + animals);
 		}
 		if(s[3].equals(""))
 		{
@@ -73,8 +71,8 @@ public class AnimalSpawnHandler
 		{
 			return;
 		}
-		ConfigurationSection configSection = plugin.getConfigHandler().getLanguage_config(plugin.getConfigHandler().getConfig().getString("language")).getConfigurationSection("animal." + getSystemNameofAnimal(s[2]) + ".color");
-		ConfigurationSection configSectiontype = plugin.getConfigHandler().getLanguage_config(plugin.getConfigHandler().getConfig().getString("language")).getConfigurationSection("animal." + getSystemNameofAnimal(s[2]) + ".type");
+		ConfigurationSection configSection = AnimalShop.getConfigHandler().getLanguage_config(AnimalShop.getConfigHandler().getConfig().getString("language")).getConfigurationSection("animal." + getSystemNameofAnimal(s[2]) + ".color");
+		ConfigurationSection configSectiontype = AnimalShop.getConfigHandler().getLanguage_config(AnimalShop.getConfigHandler().getConfig().getString("language")).getConfigurationSection("animal." + getSystemNameofAnimal(s[2]) + ".type");
 		String[] args_name = s[3].split(" ");
 		for(String string : args_name)
 		{
@@ -116,7 +114,7 @@ public class AnimalSpawnHandler
 						args += configSectiontype.getString(key) + ", ";
 					}
 				}
-				throw new SignNotValidException(plugin.getConfigHandler().getLanguageString("system", "sign.notvalid.fourthline") + " " + args);
+				throw new SignNotValidException(AnimalShop.getConfigHandler().getLanguageString("system", "sign.notvalid.fourthline") + " " + args);
 			}
 		}
 		return;
@@ -124,7 +122,7 @@ public class AnimalSpawnHandler
 
 	public String getSystemNameofAnimal(String s)
 	{
-		for(Iterator<AnimalSpawner> iterator = spawner.iterator(); iterator.hasNext();)
+		for(Iterator<AnimalSpawner> iterator = iterator(); iterator.hasNext();)
 		{
 			AnimalSpawner animalSpawner = (AnimalSpawner) iterator.next();
 			if(s.equalsIgnoreCase(animalSpawner.getIdetifier()))
@@ -137,7 +135,7 @@ public class AnimalSpawnHandler
 
 	public boolean animalNameValid(String s)
 	{
-		for(Iterator<AnimalSpawner> iterator = spawner.iterator(); iterator.hasNext();)
+		for(Iterator<AnimalSpawner> iterator = iterator(); iterator.hasNext();)
 		{
 			AnimalSpawner animalSpawner = (AnimalSpawner) iterator.next();
 			if(s.equalsIgnoreCase(animalSpawner.getIdetifier()))

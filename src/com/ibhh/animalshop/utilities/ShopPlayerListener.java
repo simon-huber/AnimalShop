@@ -12,7 +12,7 @@ import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.block.SignChangeEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 
-import com.ibhh.animalshop.Main;
+import com.ibhh.animalshop.AnimalShop;
 import com.ibhh.animalshop.exception.NoiConomyPluginFound;
 import com.ibhh.animalshop.utilities.logger.LoggerLevel;
 import com.ibhh.animalshop.utilities.metrics.MetricsHandler;
@@ -20,15 +20,8 @@ import com.ibhh.animalshop.utilities.metrics.MetricsHandler;
 public class ShopPlayerListener implements Listener
 {
 
-	private final Main plugin;
 	double doubeline;
 	private static final BlockFace[] shopFaces = {BlockFace.SELF, BlockFace.DOWN, BlockFace.UP, BlockFace.EAST, BlockFace.NORTH, BlockFace.WEST, BlockFace.SOUTH};
-
-	public ShopPlayerListener(Main plugin)
-	{
-		this.plugin = plugin;
-		plugin.getServer().getPluginManager().registerEvents(this, plugin);
-	}
 
 	@EventHandler
 	public void onInteract(PlayerInteractEvent event)
@@ -40,34 +33,36 @@ public class ShopPlayerListener implements Listener
 			String[] line = s.getLines();
 			if(line[0].toLowerCase().contains("animalshop"))
 			{
-				plugin.getLoggerUtility().log("AnimalShop sign!", LoggerLevel.DEBUG);
-				if(plugin.getPermissionsUtility().checkpermissions(p, "AnimalShop.use"))
+				AnimalShop.getLoggerUtility().log("AnimalShop sign!", LoggerLevel.DEBUG);
+				if(AnimalShop.getPermissionsUtility().checkpermissions(p, "AnimalShop.use"))
 				{
-					if(this.plugin.blockIsValid(line, p))
+					if(AnimalShop.blockIsValid(line, p))
 					{
 						double price = getPrice(s, 1, p);
 						String Animal = getType(s, 2);
 						try
 						{
-							if((plugin.getMoneyHandler().getBalance(p) - price) >= 0)
+							if((AnimalShop.getMoneyHandler().getBalance(p) - price) >= 0)
 							{
-								plugin.getMoneyHandler().substract(price, p);
-								plugin.getMetricshandler().AnimalShopSignBuy++;
-								plugin.spawnAnimal(p, Animal, line[3]);
-								plugin.getLoggerUtility().log(p, String.format(plugin.getConfigHandler().getLanguageString(p, "money.purchased"), (int) price), LoggerLevel.INFO);
-								plugin.getLoggerUtility().log(p, String.format(plugin.getConfigHandler().getLanguageString(p, "money.purchased2"), plugin.getConfigHandler().getLanguageString(p, "animal." + plugin.getAnimalSpawnHandler().getSystemNameofAnimal(Animal) + ".name")), LoggerLevel.INFO);
+								AnimalShop.getMoneyHandler().substract(price, p);
+								AnimalShop.getMetricshandler().AnimalShopSignBuy++;
+								AnimalShop.getAnimalSpawnHandler().spawnAnimal(Animal, line[3], p);
+								AnimalShop.getLoggerUtility().log(p, String.format(AnimalShop.getConfigHandler().getLanguageString(p, "money.purchased"), (int) price), LoggerLevel.INFO);
+								AnimalShop.getLoggerUtility().log(p, String.format(AnimalShop.getConfigHandler().getLanguageString(p, "money.purchased2"), AnimalShop.getConfigHandler().getLanguageString(p, "animal." + AnimalShop.getAnimalSpawnHandler().getSystemNameofAnimal(Animal) + ".name")), LoggerLevel.INFO);
 							}
 							else
 							{
-								plugin.getLoggerUtility().log(p, plugin.getConfigHandler().getLanguageString(p, "money.notenough"), LoggerLevel.ERROR);
+								AnimalShop.getLoggerUtility().log(p, AnimalShop.getConfigHandler().getLanguageString(p, "money.notenough"), LoggerLevel.ERROR);
 							}
 						}
 						catch(NoiConomyPluginFound e)
 						{
-							plugin.getLoggerUtility().log(event.getPlayer(), e.getMessage(), LoggerLevel.ERROR);
+							AnimalShop.getLoggerUtility().log(event.getPlayer(), e.getMessage(), LoggerLevel.ERROR);
 						}
-					} else {
-						plugin.getLoggerUtility().log(p, plugin.getConfigHandler().getLanguageString(p, "sign.notvalid.general"), LoggerLevel.ERROR);
+					}
+					else
+					{
+						AnimalShop.getLoggerUtility().log(p, AnimalShop.getConfigHandler().getLanguageString(p, "sign.notvalid.general"), LoggerLevel.ERROR);
 					}
 				}
 			}
@@ -102,12 +97,12 @@ public class ShopPlayerListener implements Listener
 		{
 			try
 			{
-				if(plugin.getPermissionsUtility().checkpermissions(p, "AnimalShop.create"))
+				if(AnimalShop.getPermissionsUtility().checkpermissions(p, "AnimalShop.create"))
 				{
 					String[] line = event.getLines();
-					if(plugin.blockIsValid(line, p))
+					if(AnimalShop.blockIsValid(line, p))
 					{
-						plugin.getLoggerUtility().log(p, plugin.getConfigHandler().getLanguageString(p, "sign.created"), LoggerLevel.INFO);
+						AnimalShop.getLoggerUtility().log(p, AnimalShop.getConfigHandler().getLanguageString(p, "sign.created"), LoggerLevel.INFO);
 						event.setLine(0, "[AnimalShop]");
 						MTLocation loc = MTLocation.getMTLocationFromLocation(event.getBlock().getLocation());
 						if(!MetricsHandler.Shop.containsKey(loc))
@@ -117,7 +112,7 @@ public class ShopPlayerListener implements Listener
 					}
 					else
 					{
-						plugin.getLoggerUtility().log(p, plugin.getConfigHandler().getLanguageString(p, "sign.failed"), LoggerLevel.ERROR);
+						AnimalShop.getLoggerUtility().log(p, AnimalShop.getConfigHandler().getLanguageString(p, "sign.failed"), LoggerLevel.ERROR);
 						event.setCancelled(true);
 					}
 				}
@@ -130,7 +125,7 @@ public class ShopPlayerListener implements Listener
 			{
 				e.printStackTrace();
 				event.setCancelled(true);
-				plugin.getLoggerUtility().log(p, plugin.getConfigHandler().getLanguageString(p, "sign.failed"), LoggerLevel.ERROR);
+				AnimalShop.getLoggerUtility().log(p, AnimalShop.getConfigHandler().getLanguageString(p, "sign.failed"), LoggerLevel.ERROR);
 			}
 		}
 	}
@@ -146,9 +141,9 @@ public class ShopPlayerListener implements Listener
 			{
 				if(sign.getLine(0).toLowerCase().contains("animalshop"))
 				{
-					if(plugin.getPermissionsUtility().checkpermissions(p, "AnimalShop.create"))
+					if(AnimalShop.getPermissionsUtility().checkpermissions(p, "AnimalShop.create"))
 					{
-						if(plugin.blockIsValid(sign, p))
+						if(AnimalShop.blockIsValid(sign, p))
 						{
 							MTLocation loc = MTLocation.getMTLocationFromLocation(sign.getLocation());
 							if(MetricsHandler.Shop.containsKey(loc))
@@ -171,9 +166,9 @@ public class ShopPlayerListener implements Listener
 
 			if(line[0].toLowerCase().contains("animalshop"))
 			{
-				if(plugin.getPermissionsUtility().checkpermissions(p, "AnimalShop.create"))
+				if(AnimalShop.getPermissionsUtility().checkpermissions(p, "AnimalShop.create"))
 				{
-					if(this.plugin.blockIsValid(line, p))
+					if(AnimalShop.blockIsValid(line, p))
 					{
 						MTLocation loc = MTLocation.getMTLocationFromLocation(s.getLocation());
 						if(MetricsHandler.Shop.containsKey(loc))
@@ -198,7 +193,7 @@ public class ShopPlayerListener implements Listener
 			if(isSign(faceBlock))
 			{
 				Sign sign = (Sign) faceBlock.getState();
-				if((plugin.blockIsValid(sign, p)) && ((faceBlock.equals(block)) || (getAttachedFace(sign).equals(block))))
+				if((AnimalShop.blockIsValid(sign, p)) && ((faceBlock.equals(block)) || (getAttachedFace(sign).equals(block))))
 				{
 					return sign;
 				}

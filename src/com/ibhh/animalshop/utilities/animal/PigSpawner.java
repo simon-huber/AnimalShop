@@ -4,15 +4,11 @@ import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Pig;
 import org.bukkit.entity.Player;
 
-import com.ibhh.animalshop.Main;
+import com.ibhh.animalshop.AnimalShop;
+import com.ibhh.animalshop.utilities.logger.LoggerLevel;
 
-public class PigSpawner extends AnimalSpawner
+public class PigSpawner implements AnimalSpawner
 {
-
-	public PigSpawner(Main plugin)
-	{
-		super(plugin);
-	}
 
 	@Override
 	public boolean spawn(String args, Player p)
@@ -21,21 +17,21 @@ public class PigSpawner extends AnimalSpawner
 		Pig pig = (Pig) p.getWorld().spawnEntity(p.getLocation(), EntityType.PIG);
 		for(String string : aargs)
 		{
-			if(string.toLowerCase().equalsIgnoreCase(plugin.getConfigHandler().getLanguageString("system", "animal.pig.type.BABY").toLowerCase()))
+			if(string.toLowerCase().equalsIgnoreCase(AnimalShop.getConfigHandler().getLanguageString("system", "animal.pig.type.BABY").toLowerCase()))
 			{
 				pig.setBaby();
 			}
-			if(string.toLowerCase().equalsIgnoreCase(plugin.getConfigHandler().getLanguageString("system", "animal.pig.type.AGE_LOCK").toLowerCase()))
+			if(string.toLowerCase().equalsIgnoreCase(AnimalShop.getConfigHandler().getLanguageString("system", "animal.pig.type.AGE_LOCK").toLowerCase()))
 			{
 				pig.setAgeLock(true);
 			}
-			if(string.toLowerCase().equalsIgnoreCase(plugin.getConfigHandler().getLanguageString("system", "animal.pig.type.SADDLE").toLowerCase()))
+			if(string.toLowerCase().equalsIgnoreCase(AnimalShop.getConfigHandler().getLanguageString("system", "animal.pig.type.SADDLE").toLowerCase()))
 			{
 				pig.setSaddle(true);
 				pig.setRemoveWhenFarAway(false);
 			}
 
-			if(string.toLowerCase().contains(plugin.getConfigHandler().getLanguageString("system", "animal.pig.type.CUSTOM_NAME").toLowerCase()))
+			if(string.toLowerCase().contains(AnimalShop.getConfigHandler().getLanguageString("system", "animal.pig.type.CUSTOM_NAME").toLowerCase()))
 			{
 				String[] z = string.split(":");
 				if(z.length == 2)
@@ -43,18 +39,20 @@ public class PigSpawner extends AnimalSpawner
 					pig.setCustomName(z[1]);
 				}
 			}
-			if(string.toLowerCase().equalsIgnoreCase(plugin.getConfigHandler().getLanguageString("system", "animal.pig.type.CUSTOM_NAME_INVISIBLE").toLowerCase()))
+			if(string.toLowerCase().equalsIgnoreCase(AnimalShop.getConfigHandler().getLanguageString("system", "animal.pig.type.CUSTOM_NAME_INVISIBLE").toLowerCase()))
 			{
 				pig.setCustomNameVisible(false);
 			}
 		}
+		AnimalShop.getLoggerUtility().log("Player " + p.getName() + "(" + p.getUniqueId() +") spawned a " + getIdetifier() + " with args: " + args, LoggerLevel.DEBUG);
+
 		return true;
 	}
 
 	@Override
 	public String getIdetifier()
 	{
-		return plugin.getConfigHandler().getLanguageString("system", "animal.pig.name");
+		return AnimalShop.getConfigHandler().getLanguageString("system", "animal.pig.name");
 	}
 
 	@Override

@@ -7,31 +7,32 @@ import java.util.HashMap;
 
 import org.bukkit.configuration.file.YamlConfiguration;
 
-import com.ibhh.animalshop.Main;
+import com.ibhh.animalshop.AnimalShop;
+import com.ibhh.animalshop.utilities.logger.LoggerLevel;
 
 public class LocaleHandler extends HashMap<String, PluginLocale>
 {
 	private static final long serialVersionUID = 1L;
-	private final Main plugin;
 	private File player_language_file;
 	private YamlConfiguration player_language;
 
-	public LocaleHandler(Main plugin)
+	public LocaleHandler()
 	{
-		this.plugin = plugin;
+		AnimalShop.getLoggerUtility().log("Loading language files ...", LoggerLevel.DEBUG);
+
 		/**
 		 * Alle vordefinierten Sprachen
 		 */
-		put("de_DE", new Locale_de_DE(this.plugin.getDataFolder().getPath()));
-		put("de_BY", new Locale_de_BY(this.plugin.getDataFolder().getPath()));
-		put("lb_LU", new Locale_lb_LU(this.plugin.getDataFolder().getPath()));
-		put("en_CA", new Locale_en_CA(this.plugin.getDataFolder().getPath()));
-		put("en_PT", new Locale_en_PT(this.plugin.getDataFolder().getPath()));
+		put("de_DE", new Locale_de_DE(AnimalShop.getPluginDataFolder().getPath()));
+		put("de_BY", new Locale_de_BY(AnimalShop.getPluginDataFolder().getPath()));
+		put("lb_LU", new Locale_lb_LU(AnimalShop.getPluginDataFolder().getPath()));
+		put("en_CA", new Locale_en_CA(AnimalShop.getPluginDataFolder().getPath()));
+		put("en_PT", new Locale_en_PT(AnimalShop.getPluginDataFolder().getPath()));
 		
 		/**
 		 * Liste der Dateien wird sortiert
 		 */
-		File[] eintraege = plugin.getDataFolder().listFiles(new FileFilter()
+		File[] eintraege = AnimalShop.getPluginDataFolder().listFiles(new FileFilter()
 		{
 
 			@Override
@@ -49,16 +50,20 @@ public class LocaleHandler extends HashMap<String, PluginLocale>
 		});
 		for(int j = 0; j < eintraege.length; j++)
 		{
-			File config_o = new File(plugin.getDataFolder() + File.separator + eintraege[j].getName());
+			File config_o = new File(AnimalShop.getPluginDataFolder() + File.separator + eintraege[j].getName());
 			PluginLocale language_config1 = PluginLocale.loadConfiguration(config_o);
 			put(language_config1.getCode(), language_config1);
 		}
+		AnimalShop.getLoggerUtility().log("Language files loaded", LoggerLevel.DEBUG);
 		createPlayerLanguageConfig();
+
 	}
 	
 	public void savePlayer_language() throws IOException
 	{
+		AnimalShop.getLoggerUtility().log("Saving player language file ...", LoggerLevel.DEBUG);
 		player_language.save(player_language_file);
+		AnimalShop.getLoggerUtility().log("Saved", LoggerLevel.DEBUG);
 	}
 	
 	public YamlConfiguration getPlayer_language()
@@ -71,7 +76,7 @@ public class LocaleHandler extends HashMap<String, PluginLocale>
 		/**
 		 * Liste der Dateien wird sortiert
 		 */
-		File[] eintraege = plugin.getDataFolder().listFiles(new FileFilter()
+		File[] eintraege = AnimalShop.getPluginDataFolder().listFiles(new FileFilter()
 		{
 
 			@Override
@@ -97,9 +102,10 @@ public class LocaleHandler extends HashMap<String, PluginLocale>
 
 	private void createPlayerLanguageConfig()
 	{
-		File folderp = new File(plugin.getDataFolder() + File.separator);
+		AnimalShop.getLoggerUtility().log("Creating file with player languages .. ", LoggerLevel.DEBUG);
+		File folderp = new File(AnimalShop.getPluginDataFolder() + File.separator);
 		folderp.mkdirs();
-		player_language_file = new File(plugin.getDataFolder() + File.separator + "player_language.yml");
+		player_language_file = new File(AnimalShop.getPluginDataFolder() + File.separator + "player_language.yml");
 		if(!player_language_file.exists())
 		{
 			try
@@ -121,5 +127,6 @@ public class LocaleHandler extends HashMap<String, PluginLocale>
 		{
 			e.printStackTrace();
 		}
+		AnimalShop.getLoggerUtility().log("Created", LoggerLevel.DEBUG);
 	}
 }

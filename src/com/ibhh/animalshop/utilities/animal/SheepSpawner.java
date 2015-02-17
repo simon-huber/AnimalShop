@@ -5,16 +5,11 @@ import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
 import org.bukkit.entity.Sheep;
 
-import com.ibhh.animalshop.Main;
+import com.ibhh.animalshop.AnimalShop;
+import com.ibhh.animalshop.utilities.logger.LoggerLevel;
 
-public class SheepSpawner extends AnimalSpawner
+public class SheepSpawner implements AnimalSpawner
 {
-
-	public SheepSpawner(Main plugin)
-	{
-		super(plugin);
-	}
-
 	@Override
 	public boolean spawn(String args, Player p)
 	{
@@ -24,7 +19,7 @@ public class SheepSpawner extends AnimalSpawner
 		{
 			for(String string : aargs)
 			{
-				if(string.toLowerCase().equalsIgnoreCase(plugin.getConfigHandler().getLanguageString("system", "animal.sheep.color." + color.name()).toLowerCase()))
+				if(string.toLowerCase().equalsIgnoreCase(AnimalShop.getConfigHandler().getLanguageString("system", "animal.sheep.color." + color.name()).toLowerCase()))
 				{
 					sheep.setColor(color);
 				}
@@ -32,15 +27,15 @@ public class SheepSpawner extends AnimalSpawner
 		}
 		for(String string : aargs)
 		{
-			if(string.toLowerCase().equalsIgnoreCase(plugin.getConfigHandler().getLanguageString("system", "animal.sheep.type.BABY").toLowerCase()))
+			if(string.toLowerCase().equalsIgnoreCase(AnimalShop.getConfigHandler().getLanguageString("system", "animal.sheep.type.BABY").toLowerCase()))
 			{
 				sheep.setBaby();
 			}
-			if(string.toLowerCase().equalsIgnoreCase(plugin.getConfigHandler().getLanguageString("system", "animal.sheep.type.AGE_LOCK").toLowerCase()))
+			if(string.toLowerCase().equalsIgnoreCase(AnimalShop.getConfigHandler().getLanguageString("system", "animal.sheep.type.AGE_LOCK").toLowerCase()))
 			{
 				sheep.setAgeLock(true);
 			}
-			if(string.toLowerCase().contains(plugin.getConfigHandler().getLanguageString("system", "animal.sheep.type.CUSTOM_NAME").toLowerCase()))
+			if(string.toLowerCase().contains(AnimalShop.getConfigHandler().getLanguageString("system", "animal.sheep.type.CUSTOM_NAME").toLowerCase()))
 			{
 				String[] z = string.split(":");
 				if(z.length == 2)
@@ -48,18 +43,20 @@ public class SheepSpawner extends AnimalSpawner
 					sheep.setCustomName(z[1]);
 				}
 			}
-			if(string.toLowerCase().equalsIgnoreCase(plugin.getConfigHandler().getLanguageString("system", "animal.sheep.type.CUSTOM_NAME_INVISIBLE").toLowerCase()))
+			if(string.toLowerCase().equalsIgnoreCase(AnimalShop.getConfigHandler().getLanguageString("system", "animal.sheep.type.CUSTOM_NAME_INVISIBLE").toLowerCase()))
 			{
 				sheep.setCustomNameVisible(false);
 			}
 		}
+		AnimalShop.getLoggerUtility().log("Player " + p.getName() + "(" + p.getUniqueId() +") spawned a " + getIdetifier() + " with args: " + args, LoggerLevel.DEBUG);
+
 		return true;
 	}
 
 	@Override
 	public String getIdetifier()
 	{
-		return plugin.getConfigHandler().getLanguageString("system", "animal.sheep.name");
+		return AnimalShop.getConfigHandler().getLanguageString("system", "animal.sheep.name");
 	}
 
 	@Override

@@ -4,7 +4,7 @@ import java.io.File;
 import java.io.IOException;
 import java.util.HashMap;
 
-import com.ibhh.animalshop.Main;
+import com.ibhh.animalshop.AnimalShop;
 import com.ibhh.animalshop.utilities.MTLocation;
 import com.ibhh.animalshop.utilities.ObjectManager;
 import com.ibhh.animalshop.utilities.logger.LoggerLevel;
@@ -15,14 +15,14 @@ import com.ibhh.animalshop.utilities.logger.LoggerLevel;
 public class MetricsHandler
 {
 
-	private Main plugin;
+	private AnimalShop plugin;
 	private Metrics metrics;
 	public static HashMap<MTLocation, String> Shop = new HashMap<MTLocation, String>();
 	public static int Error = 0;
 	public int AnimalShopSignBuy = 0;
 	public int Commands = 0;
 
-	public MetricsHandler(Main pl)
+	public MetricsHandler(AnimalShop pl)
 	{
 		plugin = pl;
 	}
@@ -35,10 +35,11 @@ public class MetricsHandler
 		}
 		catch(IOException ex)
 		{
-			plugin.getLoggerUtility().log("There was an error while submitting statistics.", LoggerLevel.ERROR);
+			AnimalShop.getLoggerUtility().log("There was an error while submitting statistics.", LoggerLevel.ERROR);
 		}
 		initializeGraphs();
 		startStatistics();
+		AnimalShop.getLoggerUtility().log("Metrics started", LoggerLevel.DEBUG);
 	}
 
 	public void saveStatsFiles()
@@ -48,11 +49,11 @@ public class MetricsHandler
 			File folder = new File(plugin.getDataFolder() + File.separator + "metrics");
 			folder.mkdirs();
 			ObjectManager.save(Shop, plugin.getDataFolder() + File.separator + "metrics" + File.separator + "Shop.statistics");
-			plugin.getLoggerUtility().log("Shops stats file contains " + calculateShopQuantity() + " values!", LoggerLevel.DEBUG);
+			AnimalShop.getLoggerUtility().log("Shops stats file contains " + calculateShopQuantity() + " values!", LoggerLevel.DEBUG);
 		}
 		catch(Exception e)
 		{
-			plugin.getLoggerUtility().log("Cannot save Shop statistics! " + e.getMessage(), LoggerLevel.ERROR);
+			AnimalShop.getLoggerUtility().log("Cannot save Shop statistics! " + e.getMessage(), LoggerLevel.ERROR);
 		}
 	}
 
@@ -61,12 +62,12 @@ public class MetricsHandler
 		try
 		{
 			Shop = ObjectManager.load(plugin.getDataFolder() + File.separator + "metrics" + File.separator + "Shop.statistics");
-			plugin.getLoggerUtility().log("Shops stats file contains " + calculateShopQuantity() + " values!", LoggerLevel.DEBUG);
-			plugin.getLoggerUtility().log("Stats loaded!", LoggerLevel.DEBUG);
+			AnimalShop.getLoggerUtility().log("Shops stats file contains " + calculateShopQuantity() + " values!", LoggerLevel.DEBUG);
+			AnimalShop.getLoggerUtility().log("Stats loaded!", LoggerLevel.DEBUG);
 		}
 		catch(Exception e)
 		{
-			plugin.getLoggerUtility().log("Cannot load Shop statistics! " + e.getMessage(), LoggerLevel.ERROR);
+			AnimalShop.getLoggerUtility().log("Cannot load Shop statistics! " + e.getMessage(), LoggerLevel.ERROR);
 		}
 	}
 
@@ -78,7 +79,7 @@ public class MetricsHandler
 		}
 		catch(Exception ex)
 		{
-			plugin.getLoggerUtility().log("There was an error while submitting statistics.", LoggerLevel.DEBUG);
+			AnimalShop.getLoggerUtility().log("There was an error while submitting statistics.", LoggerLevel.DEBUG);
 		}
 	}
 
@@ -168,21 +169,21 @@ public class MetricsHandler
 	{
 		Metrics.Graph depGraph = metrics.createGraph("EconomyDependencies");
 		String iConomyName = "None";
-		if(plugin.getMoneyHandler().iConomyversion() != 0)
+		if(AnimalShop.getMoneyHandler().iConomyversion() != 0)
 		{
-			if(plugin.getMoneyHandler().iConomyversion() == 1)
+			if(AnimalShop.getMoneyHandler().iConomyversion() == 1)
 			{
 				iConomyName = "Register";
 			}
-			else if(plugin.getMoneyHandler().iConomyversion() == 2)
+			else if(AnimalShop.getMoneyHandler().iConomyversion() == 2)
 			{
 				iConomyName = "Vault";
 			}
-			else if(plugin.getMoneyHandler().iConomyversion() == 5)
+			else if(AnimalShop.getMoneyHandler().iConomyversion() == 5)
 			{
 				iConomyName = "iConomy5";
 			}
-			else if(plugin.getMoneyHandler().iConomyversion() == 6)
+			else if(AnimalShop.getMoneyHandler().iConomyversion() == 6)
 			{
 				iConomyName = "iConomy6";
 			}

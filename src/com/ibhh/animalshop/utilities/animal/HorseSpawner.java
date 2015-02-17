@@ -4,16 +4,11 @@ import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Horse;
 import org.bukkit.entity.Player;
 
-import com.ibhh.animalshop.Main;
+import com.ibhh.animalshop.AnimalShop;
+import com.ibhh.animalshop.utilities.logger.LoggerLevel;
 
-public class HorseSpawner extends AnimalSpawner
+public class HorseSpawner implements AnimalSpawner
 {
-
-	public HorseSpawner(Main plugin)
-	{
-		super(plugin);
-	}
-
 	@Override
 	public boolean spawn(String args, Player p)
 	{
@@ -26,7 +21,7 @@ public class HorseSpawner extends AnimalSpawner
 		{
 			for(String string : aargs)
 			{
-				if(string.toLowerCase().equalsIgnoreCase(plugin.getConfigHandler().getLanguageString("system", "animal.horse.type." + variant.name()).toLowerCase()))
+				if(string.toLowerCase().equalsIgnoreCase(AnimalShop.getConfigHandler().getLanguageString("system", "animal.horse.type." + variant.name()).toLowerCase()))
 				{
 					horse.setVariant(variant);
 				}
@@ -37,7 +32,7 @@ public class HorseSpawner extends AnimalSpawner
 		{
 			for(String string : aargs)
 			{
-				if(string.toLowerCase().equalsIgnoreCase(plugin.getConfigHandler().getLanguageString("system", "animal.horse.color." + variant.name()).toLowerCase()))
+				if(string.toLowerCase().equalsIgnoreCase(AnimalShop.getConfigHandler().getLanguageString("system", "animal.horse.color." + variant.name()).toLowerCase()))
 				{
 					horse.setColor(variant);
 				}
@@ -48,7 +43,7 @@ public class HorseSpawner extends AnimalSpawner
 		{
 			for(String string : aargs)
 			{
-				if(string.toLowerCase().equalsIgnoreCase(plugin.getConfigHandler().getLanguageString("system", "animal.horse.type." + variant.name()).toLowerCase()))
+				if(string.toLowerCase().equalsIgnoreCase(AnimalShop.getConfigHandler().getLanguageString("system", "animal.horse.type." + variant.name()).toLowerCase()))
 				{
 					horse.setStyle(variant);
 				}
@@ -56,25 +51,25 @@ public class HorseSpawner extends AnimalSpawner
 		}
 		for(String string : aargs)
 		{
-			if(string.toLowerCase().equalsIgnoreCase(plugin.getConfigHandler().getLanguageString("system", "animal.horse.type.TAMED").toLowerCase()))
+			if(string.toLowerCase().equalsIgnoreCase(AnimalShop.getConfigHandler().getLanguageString("system", "animal.horse.type.TAMED").toLowerCase()))
 			{
 				horse.setTamed(true);
 				horse.setOwner(p);
 			}
-			if(string.toLowerCase().equalsIgnoreCase(plugin.getConfigHandler().getLanguageString("system", "animal.horse.type.BABY").toLowerCase()))
+			if(string.toLowerCase().equalsIgnoreCase(AnimalShop.getConfigHandler().getLanguageString("system", "animal.horse.type.BABY").toLowerCase()))
 			{
 				horse.setBaby();
 			}
-			if(string.toLowerCase().equalsIgnoreCase(plugin.getConfigHandler().getLanguageString("system", "animal.horse.type.CHEST").toLowerCase()))
+			if(string.toLowerCase().equalsIgnoreCase(AnimalShop.getConfigHandler().getLanguageString("system", "animal.horse.type.CHEST").toLowerCase()))
 			{
 				horse.setCarryingChest(true);
 			}
-			if(string.toLowerCase().equalsIgnoreCase(plugin.getConfigHandler().getLanguageString("system", "animal.horse.type.AGE_LOCK").toLowerCase()))
+			if(string.toLowerCase().equalsIgnoreCase(AnimalShop.getConfigHandler().getLanguageString("system", "animal.horse.type.AGE_LOCK").toLowerCase()))
 			{
 				horse.setAgeLock(true);
 			}
 
-			if(string.toLowerCase().contains(plugin.getConfigHandler().getLanguageString("system", "animal.horse.type.CUSTOM_NAME").toLowerCase()))
+			if(string.toLowerCase().contains(AnimalShop.getConfigHandler().getLanguageString("system", "animal.horse.type.CUSTOM_NAME").toLowerCase()))
 			{
 				String[] z = string.split(":");
 				if(z.length == 2)
@@ -82,18 +77,20 @@ public class HorseSpawner extends AnimalSpawner
 					horse.setCustomName(z[1]);
 				}
 			}
-			if(string.toLowerCase().equalsIgnoreCase(plugin.getConfigHandler().getLanguageString("system", "animal.horse.type.CUSTOM_NAME_INVISIBLE").toLowerCase()))
+			if(string.toLowerCase().equalsIgnoreCase(AnimalShop.getConfigHandler().getLanguageString("system", "animal.horse.type.CUSTOM_NAME_INVISIBLE").toLowerCase()))
 			{
 				horse.setCustomNameVisible(false);
 			}
 		}
+		AnimalShop.getLoggerUtility().log("Player " + p.getName() + "(" + p.getUniqueId() +") spawned a " + getIdetifier() + " with args: " + args, LoggerLevel.DEBUG);
+
 		return true;
 	}
 
 	@Override
 	public String getIdetifier()
 	{
-		return plugin.getConfigHandler().getLanguageString("system", "animal.horse.name");
+		return AnimalShop.getConfigHandler().getLanguageString("system", "animal.horse.name");
 	}
 
 	@Override

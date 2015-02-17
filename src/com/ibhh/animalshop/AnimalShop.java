@@ -5,6 +5,8 @@
 
 package com.ibhh.animalshop;
 
+import java.io.File;
+
 import org.bukkit.block.Sign;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -22,55 +24,55 @@ import com.ibhh.animalshop.utilities.logger.LoggerLevel;
 import com.ibhh.animalshop.utilities.logger.LoggerUtility;
 import com.ibhh.animalshop.utilities.metrics.MetricsHandler;
 
-public class Main extends JavaPlugin
+public class AnimalShop extends JavaPlugin
 {
-	private ConfigurationHandler confighandler;
-	private PermissionsUtility permissionUtility;
-	private MoneyHandler moneyHandler;
-	private LoggerUtility loggerUtility;
-	private Commands commands;
-	private Help help;
-	@SuppressWarnings("unused")
-	private ShopPlayerListener listener;
-	private MetricsHandler metricshandler;
-	private AnimalSpawnHandler animalSpawnHandler;
+	private static ConfigurationHandler confighandler;
+	private static PermissionsUtility permissionUtility;
+	private static MoneyHandler moneyHandler;
+	private static LoggerUtility loggerUtility;
+	private static Commands commands;
+	private static ShopPlayerListener listener;
+	private static MetricsHandler metricshandler;
+	private static AnimalSpawnHandler animalSpawnHandler;
+	private static File datafolder;
+	private static boolean loaded = false;
 
-	public AnimalSpawnHandler getAnimalSpawnHandler()
+	public static AnimalSpawnHandler getAnimalSpawnHandler()
 	{
 		return animalSpawnHandler;
 	}
 
-	public MetricsHandler getMetricshandler()
+	public static MetricsHandler getMetricshandler()
 	{
 		return metricshandler;
 	}
 
-	public ConfigurationHandler getConfigHandler()
+	public static File getPluginDataFolder()
+	{
+		return datafolder;
+	}
+
+	public static ConfigurationHandler getConfigHandler()
 	{
 		return confighandler;
 	}
 
-	public PermissionsUtility getPermissionsUtility()
+	public static PermissionsUtility getPermissionsUtility()
 	{
 		return permissionUtility;
 	}
 
-	public MoneyHandler getMoneyHandler()
+	public static MoneyHandler getMoneyHandler()
 	{
 		return moneyHandler;
 	}
 
-	public LoggerUtility getLoggerUtility()
+	public static LoggerUtility getLoggerUtility()
 	{
 		return loggerUtility;
 	}
 
-	public Help getHelp()
-	{
-		return help;
-	}
-
-	public Commands getCommandsUtility()
+	public static Commands getCommandsUtility()
 	{
 		return commands;
 	}
@@ -84,13 +86,13 @@ public class Main extends JavaPlugin
 	@Override
 	public void onEnable()
 	{
-		confighandler = new ConfigurationHandler(this);
-		permissionUtility = new PermissionsUtility(this);
-		loggerUtility = new LoggerUtility(this);
+		datafolder = getDataFolder();
+		loggerUtility = new LoggerUtility();
+		confighandler = new ConfigurationHandler();
+		confighandler.init(this);
+		permissionUtility = new PermissionsUtility();
 		moneyHandler = new MoneyHandler(this);
-		help = new Help(this);
-		animalSpawnHandler = new AnimalSpawnHandler(this);
-
+		animalSpawnHandler = new AnimalSpawnHandler();
 		metricshandler = new MetricsHandler(this);
 		metricshandler.loadStatsFiles();
 		this.getServer().getScheduler().runTaskTimerAsynchronously(this, new Runnable()
@@ -121,20 +123,22 @@ public class Main extends JavaPlugin
 		}
 
 		/* Commandexecutor (Command in einer andere Klasse ausgelagert!) */
-		commands = new Commands(this);
+		commands = new Commands();
 		this.getCommand("animalshop").setExecutor(commands);
 		/* Eventregistrierung */
-		listener = new ShopPlayerListener(this);
-		getCommand("animalshop").setTabCompleter(new AnimalShopTabCompleter(this));
+		listener = new ShopPlayerListener();
+		getServer().getPluginManager().registerEvents(listener, this);
+		getCommand("animalshop").setTabCompleter(new AnimalShopTabCompleter());
 		getLoggerUtility().log("AnimalShop loaded", LoggerLevel.INFO);
+		loaded = true;
 	}
 
-	public boolean blockIsValid(Sign s, Player p)
+	public static boolean blockIsValid(Sign s, Player p)
 	{
 		return blockIsValid(s.getLines(), p);
 	}
 
-	public boolean blockIsValid(String[] line, Player p)
+	public static boolean blockIsValid(String[] line, Player p)
 	{
 		try
 		{
@@ -154,8 +158,11 @@ public class Main extends JavaPlugin
 		}
 	}
 
-	public void spawnAnimal(Player p, String animal, String args)
+	/**
+	 * @return the loaded
+	 */
+	public static boolean isLoaded()
 	{
-		animalSpawnHandler.spawnAnimal(animal, args, p);
+		return loaded;
 	}
 }
