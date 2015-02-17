@@ -26,7 +26,7 @@ public class WolfSpawner extends AnimalSpawner
 		{
 			for(String string : aargs)
 			{
-				if(string.toLowerCase().contains(plugin.getConfigHandler().getLanguageString("system", "animal.wolf.color." + color.name()).toLowerCase()))
+				if(string.toLowerCase().equalsIgnoreCase(plugin.getConfigHandler().getLanguageString("system", "animal.wolf.color." + color.name()).toLowerCase()))
 				{
 					wolf.setCollarColor(color);
 				}
@@ -34,21 +34,21 @@ public class WolfSpawner extends AnimalSpawner
 		}
 		for(String string : aargs)
 		{
-			if(string.toLowerCase().contains(plugin.getConfigHandler().getLanguageString("system", "animal.wolf.type.TAMED").toLowerCase()))
+			if(string.toLowerCase().equalsIgnoreCase(plugin.getConfigHandler().getLanguageString("system", "animal.wolf.type.TAMED").toLowerCase()))
 			{
 				wolf.setTamed(true);
 				wolf.setOwner(p);
 			}
-			if(string.toLowerCase().contains(plugin.getConfigHandler().getLanguageString("system", "animal.wolf.type.ANGRY").toLowerCase()))
+			if(string.toLowerCase().equalsIgnoreCase(plugin.getConfigHandler().getLanguageString("system", "animal.wolf.type.ANGRY").toLowerCase()))
 			{
 				plugin.getLoggerUtility().log("Set angry", LoggerLevel.DEBUG);
 				wolf.setAngry(true);
 			}
-			if(string.toLowerCase().contains(plugin.getConfigHandler().getLanguageString("system", "animal.wolf.type.BABY").toLowerCase()))
+			if(string.toLowerCase().equalsIgnoreCase(plugin.getConfigHandler().getLanguageString("system", "animal.wolf.type.BABY").toLowerCase()))
 			{
 				wolf.setBaby();
 			}
-			if(string.toLowerCase().contains(plugin.getConfigHandler().getLanguageString("system", "animal.wolf.type.AGE_LOCK").toLowerCase()))
+			if(string.toLowerCase().equalsIgnoreCase(plugin.getConfigHandler().getLanguageString("system", "animal.wolf.type.AGE_LOCK").toLowerCase()))
 			{
 				wolf.setAgeLock(true);
 			}
@@ -60,7 +60,7 @@ public class WolfSpawner extends AnimalSpawner
 					wolf.setCustomName(z[1]);
 				}
 			}
-			if(string.toLowerCase().contains(plugin.getConfigHandler().getLanguageString("system", "animal.wolf.type.CUSTOME_NAME_INVISIBLE").toLowerCase()))
+			if(string.toLowerCase().equalsIgnoreCase(plugin.getConfigHandler().getLanguageString("system", "animal.wolf.type.CUSTOM_NAME_INVISIBLE").toLowerCase()))
 			{
 				wolf.setCustomNameVisible(false);
 			}

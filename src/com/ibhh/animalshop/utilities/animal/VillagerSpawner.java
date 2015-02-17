@@ -25,7 +25,7 @@ public class VillagerSpawner extends AnimalSpawner
 		{
 			for(String string : aargs)
 			{
-				if(string.toLowerCase().contains(plugin.getConfigHandler().getLanguageString("system", "animal.villager.type." + prof.name()).toLowerCase()))
+				if(string.toLowerCase().equalsIgnoreCase(plugin.getConfigHandler().getLanguageString("system", "animal.villager.type." + prof.name()).toLowerCase()))
 				{
 					villager.setProfession(prof);
 				}
@@ -33,16 +33,16 @@ public class VillagerSpawner extends AnimalSpawner
 		}
 		for(String string : aargs)
 		{
-			if(string.toLowerCase().contains(plugin.getConfigHandler().getLanguageString("system", "animal.villager.type.BABY").toLowerCase()))
+			if(string.toLowerCase().equalsIgnoreCase(plugin.getConfigHandler().getLanguageString("system", "animal.villager.type.BABY").toLowerCase()))
 			{
 				villager.setBaby();
 			}
-			if(string.toLowerCase().contains(plugin.getConfigHandler().getLanguageString("system", "animal.villager.type.AGE_LOCK").toLowerCase()))
+			if(string.toLowerCase().equalsIgnoreCase(plugin.getConfigHandler().getLanguageString("system", "animal.villager.type.AGE_LOCK").toLowerCase()))
 			{
 				villager.setAgeLock(true);
 			}
 
-			if(string.toLowerCase().contains(plugin.getConfigHandler().getLanguageString("system", "animal.villager.type.CUSTOM_NAME").toLowerCase()))
+			if(string.toLowerCase().equalsIgnoreCase(plugin.getConfigHandler().getLanguageString("system", "animal.villager.type.CUSTOM_NAME").toLowerCase()))
 			{
 				String[] z = string.split(":");
 				if(z.length == 2)
@@ -50,7 +50,7 @@ public class VillagerSpawner extends AnimalSpawner
 					villager.setCustomName(z[1]);
 				}
 			}
-			if(string.toLowerCase().contains(plugin.getConfigHandler().getLanguageString("system", "animal.villager.type.CUSTOME_NAME_INVISIBLE").toLowerCase()))
+			if(string.toLowerCase().equalsIgnoreCase(plugin.getConfigHandler().getLanguageString("system", "animal.villager.type.CUSTOM_NAME_INVISIBLE").toLowerCase()))
 			{
 				villager.setCustomNameVisible(false);
 			}

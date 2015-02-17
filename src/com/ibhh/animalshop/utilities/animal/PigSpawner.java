@@ -21,15 +21,15 @@ public class PigSpawner extends AnimalSpawner
 		Pig pig = (Pig) p.getWorld().spawnEntity(p.getLocation(), EntityType.PIG);
 		for(String string : aargs)
 		{
-			if(string.toLowerCase().contains(plugin.getConfigHandler().getLanguageString("system", "animal.pig.type.BABY").toLowerCase()))
+			if(string.toLowerCase().equalsIgnoreCase(plugin.getConfigHandler().getLanguageString("system", "animal.pig.type.BABY").toLowerCase()))
 			{
 				pig.setBaby();
 			}
-			if(string.toLowerCase().contains(plugin.getConfigHandler().getLanguageString("system", "animal.pig.type.AGE_LOCK").toLowerCase()))
+			if(string.toLowerCase().equalsIgnoreCase(plugin.getConfigHandler().getLanguageString("system", "animal.pig.type.AGE_LOCK").toLowerCase()))
 			{
 				pig.setAgeLock(true);
 			}
-			if(string.toLowerCase().contains(plugin.getConfigHandler().getLanguageString("system", "animal.pig.type.SADDLE").toLowerCase()))
+			if(string.toLowerCase().equalsIgnoreCase(plugin.getConfigHandler().getLanguageString("system", "animal.pig.type.SADDLE").toLowerCase()))
 			{
 				pig.setSaddle(true);
 				pig.setRemoveWhenFarAway(false);
@@ -43,7 +43,7 @@ public class PigSpawner extends AnimalSpawner
 					pig.setCustomName(z[1]);
 				}
 			}
-			if(string.toLowerCase().contains(plugin.getConfigHandler().getLanguageString("system", "animal.pig.type.CUSTOME_NAME_INVISIBLE").toLowerCase()))
+			if(string.toLowerCase().equalsIgnoreCase(plugin.getConfigHandler().getLanguageString("system", "animal.pig.type.CUSTOM_NAME_INVISIBLE").toLowerCase()))
 			{
 				pig.setCustomNameVisible(false);
 			}

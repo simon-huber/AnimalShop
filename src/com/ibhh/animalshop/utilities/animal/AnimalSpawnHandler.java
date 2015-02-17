@@ -25,6 +25,7 @@ public class AnimalSpawnHandler
 		spawner.add(new WolfSpawner(plugin));
 		spawner.add(new CatSpawner(plugin));
 		spawner.add(new HorseSpawner(plugin));
+		spawner.add(new RabbitSpawner(plugin));
 	}
 
 	public boolean spawnAnimal(String animal, String args, Player p)

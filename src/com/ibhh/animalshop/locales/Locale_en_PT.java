@@ -181,6 +181,25 @@ public class Locale_en_PT extends PluginLocale implements PredefinedLocale
 		addDefault("animal.horse.type.AGE_LOCK", "age_lock");
 		addDefault("animal.horse.type.CUSTOM_NAME", "name:");
 		addDefault("animal.horse.type.CUSTOM_NAME_INVISIBLE", "nainvis");
+		
+		addDefault("animal.chicken.name", "Chicken");
+		addDefault("animal.chicken.type.BABY", "baby");
+		addDefault("animal.chicken.type.AGE_LOCK", "age_lock");
+		addDefault("animal.chicken.type.CUSTOM_NAME", "name:");
+		addDefault("animal.chicken.type.CUSTOM_NAME_INVISIBLE", "nainvis");
+		
+		addDefault("animal.rabbit.name", "Rabbit");
+		addDefault("animal.rabbit.type.BLACK", "black");
+		addDefault("animal.rabbit.type.BLACK_AND_WHITE", "blackandwhite");
+		addDefault("animal.rabbit.type.BROWN", "brown");
+		addDefault("animal.rabbit.type.GOLD", "gold");
+		addDefault("animal.rabbit.type.SALT_AND_PEPPER", "salt_and_pepper");
+		addDefault("animal.rabbit.type.WHITE", "white");
+		addDefault("animal.rabbit.type.THE_KILLER_BUNNY", "killerbunny");
+		addDefault("animal.rabbit.type.BABY", "baby");
+		addDefault("animal.rabbit.type.AGE_LOCK", "age_lock");
+		addDefault("animal.rabbit.type.CUSTOM_NAME", "name:");
+		addDefault("animal.rabbit.type.CUSTOM_NAME_INVISIBLE", "nainvis");
 
 		/* changelanguage Command */
 		addDefault("commands.changelanguage.name", "changelanguage");

@@ -22,11 +22,11 @@ public class MushroomCowSpawner extends AnimalSpawner
 		mushroomcow.setRemoveWhenFarAway(false);
 		for(String string : aargs)
 		{
-			if(string.toLowerCase().contains(plugin.getConfigHandler().getLanguageString("system", "animal.mushroomcow.type.BABY").toLowerCase()))
+			if(string.toLowerCase().equalsIgnoreCase(plugin.getConfigHandler().getLanguageString("system", "animal.mushroomcow.type.BABY").toLowerCase()))
 			{
 				mushroomcow.setBaby();
 			}
-			if(string.toLowerCase().contains(plugin.getConfigHandler().getLanguageString("system", "animal.mushroomcow.type.AGE_LOCK").toLowerCase()))
+			if(string.toLowerCase().equalsIgnoreCase(plugin.getConfigHandler().getLanguageString("system", "animal.mushroomcow.type.AGE_LOCK").toLowerCase()))
 			{
 				mushroomcow.setAgeLock(true);
 			}
@@ -38,7 +38,7 @@ public class MushroomCowSpawner extends AnimalSpawner
 					mushroomcow.setCustomName(z[1]);
 				}
 			}
-			if(string.toLowerCase().contains(plugin.getConfigHandler().getLanguageString("system", "animal.mushroomcow.type.CUSTOME_NAME_INVISIBLE").toLowerCase()))
+			if(string.toLowerCase().equalsIgnoreCase(plugin.getConfigHandler().getLanguageString("system", "animal.mushroomcow.type.CUSTOM_NAME_INVISIBLE").toLowerCase()))
 			{
 				mushroomcow.setCustomNameVisible(false);
 			}

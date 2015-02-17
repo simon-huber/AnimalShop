@@ -24,7 +24,7 @@ public class SheepSpawner extends AnimalSpawner
 		{
 			for(String string : aargs)
 			{
-				if(string.toLowerCase().contains(plugin.getConfigHandler().getLanguageString("system", "animal.sheep.color." + color.name()).toLowerCase()))
+				if(string.toLowerCase().equalsIgnoreCase(plugin.getConfigHandler().getLanguageString("system", "animal.sheep.color." + color.name()).toLowerCase()))
 				{
 					sheep.setColor(color);
 				}
@@ -32,11 +32,11 @@ public class SheepSpawner extends AnimalSpawner
 		}
 		for(String string : aargs)
 		{
-			if(string.toLowerCase().contains(plugin.getConfigHandler().getLanguageString("system", "animal.sheep.type.BABY").toLowerCase()))
+			if(string.toLowerCase().equalsIgnoreCase(plugin.getConfigHandler().getLanguageString("system", "animal.sheep.type.BABY").toLowerCase()))
 			{
 				sheep.setBaby();
 			}
-			if(string.toLowerCase().contains(plugin.getConfigHandler().getLanguageString("system", "animal.sheep.type.AGE_LOCK").toLowerCase()))
+			if(string.toLowerCase().equalsIgnoreCase(plugin.getConfigHandler().getLanguageString("system", "animal.sheep.type.AGE_LOCK").toLowerCase()))
 			{
 				sheep.setAgeLock(true);
 			}
@@ -48,7 +48,7 @@ public class SheepSpawner extends AnimalSpawner
 					sheep.setCustomName(z[1]);
 				}
 			}
-			if(string.toLowerCase().contains(plugin.getConfigHandler().getLanguageString("system", "animal.sheep.type.CUSTOME_NAME_INVISIBLE").toLowerCase()))
+			if(string.toLowerCase().equalsIgnoreCase(plugin.getConfigHandler().getLanguageString("system", "animal.sheep.type.CUSTOM_NAME_INVISIBLE").toLowerCase()))
 			{
 				sheep.setCustomNameVisible(false);
 			}

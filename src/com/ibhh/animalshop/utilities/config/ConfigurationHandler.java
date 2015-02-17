@@ -112,7 +112,7 @@ public class ConfigurationHandler
 			if(config.getString(path) == null)
 			{
 				ret += ChatColor.RED + "ERROR: ";
-				plugin.getLoggerUtility().log("arenaconfig.getLanguageString(type, path) == null", LoggerLevel.DEBUG);
+				plugin.getLoggerUtility().log("arenaconfig.getLanguageString(type, path) == null because path " + path + " type: " + type, LoggerLevel.DEBUG);
 				PluginLocale config_sys = getLanguage_config("system");
 				if(config_sys != null && config.getString(path) != null)
 				{

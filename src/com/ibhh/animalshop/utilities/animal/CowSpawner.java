@@ -21,11 +21,11 @@ public class CowSpawner extends AnimalSpawner
 		Cow cow = (Cow) p.getWorld().spawnEntity(p.getLocation(), EntityType.COW);
 		for(String string : aargs)
 		{
-			if(string.toLowerCase().contains(plugin.getConfigHandler().getLanguageString("system", "animal.cow.type.BABY").toLowerCase()))
+			if(string.toLowerCase().equalsIgnoreCase(plugin.getConfigHandler().getLanguageString("system", "animal.cow.type.BABY").toLowerCase()))
 			{
 				cow.setBaby();
 			}
-			if(string.toLowerCase().contains(plugin.getConfigHandler().getLanguageString("system", "animal.cow.type.AGE_LOCK").toLowerCase()))
+			if(string.toLowerCase().equalsIgnoreCase(plugin.getConfigHandler().getLanguageString("system", "animal.cow.type.AGE_LOCK").toLowerCase()))
 			{
 				cow.setAgeLock(true);
 			}
@@ -37,7 +37,7 @@ public class CowSpawner extends AnimalSpawner
 					cow.setCustomName(z[1]);
 				}
 			}
-			if(string.toLowerCase().contains(plugin.getConfigHandler().getLanguageString("system", "animal.cow.type.CUSTOME_NAME_INVISIBLE").toLowerCase()))
+			if(string.toLowerCase().equalsIgnoreCase(plugin.getConfigHandler().getLanguageString("system", "animal.cow.type.CUSTOM_NAME_INVISIBLE").toLowerCase()))
 			{
 				cow.setCustomNameVisible(false);
 			}

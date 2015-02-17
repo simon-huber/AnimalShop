@@ -26,7 +26,7 @@ public class HorseSpawner extends AnimalSpawner
 		{
 			for(String string : aargs)
 			{
-				if(string.toLowerCase().contains(plugin.getConfigHandler().getLanguageString("system", "animal.horse.type." + variant.name()).toLowerCase()))
+				if(string.toLowerCase().equalsIgnoreCase(plugin.getConfigHandler().getLanguageString("system", "animal.horse.type." + variant.name()).toLowerCase()))
 				{
 					horse.setVariant(variant);
 				}
@@ -37,7 +37,7 @@ public class HorseSpawner extends AnimalSpawner
 		{
 			for(String string : aargs)
 			{
-				if(string.toLowerCase().contains(plugin.getConfigHandler().getLanguageString("system", "animal.horse.color." + variant.name()).toLowerCase()))
+				if(string.toLowerCase().equalsIgnoreCase(plugin.getConfigHandler().getLanguageString("system", "animal.horse.color." + variant.name()).toLowerCase()))
 				{
 					horse.setColor(variant);
 				}
@@ -48,7 +48,7 @@ public class HorseSpawner extends AnimalSpawner
 		{
 			for(String string : aargs)
 			{
-				if(string.toLowerCase().contains(plugin.getConfigHandler().getLanguageString("system", "animal.horse.type." + variant.name()).toLowerCase()))
+				if(string.toLowerCase().equalsIgnoreCase(plugin.getConfigHandler().getLanguageString("system", "animal.horse.type." + variant.name()).toLowerCase()))
 				{
 					horse.setStyle(variant);
 				}
@@ -56,20 +56,20 @@ public class HorseSpawner extends AnimalSpawner
 		}
 		for(String string : aargs)
 		{
-			if(string.toLowerCase().contains(plugin.getConfigHandler().getLanguageString("system", "animal.horse.type.TAMED").toLowerCase()))
+			if(string.toLowerCase().equalsIgnoreCase(plugin.getConfigHandler().getLanguageString("system", "animal.horse.type.TAMED").toLowerCase()))
 			{
 				horse.setTamed(true);
 				horse.setOwner(p);
 			}
-			if(string.toLowerCase().contains(plugin.getConfigHandler().getLanguageString("system", "animal.horse.type.BABY").toLowerCase()))
+			if(string.toLowerCase().equalsIgnoreCase(plugin.getConfigHandler().getLanguageString("system", "animal.horse.type.BABY").toLowerCase()))
 			{
 				horse.setBaby();
 			}
-			if(string.toLowerCase().contains(plugin.getConfigHandler().getLanguageString("system", "animal.horse.type.CHEST").toLowerCase()))
+			if(string.toLowerCase().equalsIgnoreCase(plugin.getConfigHandler().getLanguageString("system", "animal.horse.type.CHEST").toLowerCase()))
 			{
 				horse.setCarryingChest(true);
 			}
-			if(string.toLowerCase().contains(plugin.getConfigHandler().getLanguageString("system", "animal.horse.type.AGE_LOCK").toLowerCase()))
+			if(string.toLowerCase().equalsIgnoreCase(plugin.getConfigHandler().getLanguageString("system", "animal.horse.type.AGE_LOCK").toLowerCase()))
 			{
 				horse.setAgeLock(true);
 			}
@@ -82,7 +82,7 @@ public class HorseSpawner extends AnimalSpawner
 					horse.setCustomName(z[1]);
 				}
 			}
-			if(string.toLowerCase().contains(plugin.getConfigHandler().getLanguageString("system", "animal.horse.type.CUSTOME_NAME_INVISIBLE").toLowerCase()))
+			if(string.toLowerCase().equalsIgnoreCase(plugin.getConfigHandler().getLanguageString("system", "animal.horse.type.CUSTOM_NAME_INVISIBLE").toLowerCase()))
 			{
 				horse.setCustomNameVisible(false);
 			}

@@ -24,7 +24,7 @@ public class CatSpawner extends AnimalSpawner
 		{
 			for(String string : aargs)
 			{
-				if(string.toLowerCase().contains(plugin.getConfigHandler().getLanguageString("system", "animal.ocelot.type." + type.name()).toLowerCase()))
+				if(string.toLowerCase().equalsIgnoreCase(plugin.getConfigHandler().getLanguageString("system", "animal.ocelot.type." + type.name()).toLowerCase()))
 				{
 					ocelot.setCatType(type);
 				}
@@ -32,21 +32,21 @@ public class CatSpawner extends AnimalSpawner
 		}
 		for(String string : aargs)
 		{
-			if(string.toLowerCase().contains(plugin.getConfigHandler().getLanguageString("system", "animal.ocelot.type.TAMED").toLowerCase()))
+			if(string.toLowerCase().equalsIgnoreCase(plugin.getConfigHandler().getLanguageString("system", "animal.ocelot.type.TAMED").toLowerCase()))
 			{
 				ocelot.setTamed(true);
 				ocelot.setOwner(p);
 			}
 
-			if(string.toLowerCase().contains(plugin.getConfigHandler().getLanguageString("system", "animal.ocelot.type.BABY").toLowerCase()))
+			if(string.toLowerCase().equalsIgnoreCase(plugin.getConfigHandler().getLanguageString("system", "animal.ocelot.type.BABY").toLowerCase()))
 			{
 				ocelot.setBaby();
 			}
-			if(string.toLowerCase().contains(plugin.getConfigHandler().getLanguageString("system", "animal.ocelot.type.AGE_LOCK").toLowerCase()))
+			if(string.toLowerCase().equalsIgnoreCase(plugin.getConfigHandler().getLanguageString("system", "animal.ocelot.type.AGE_LOCK").toLowerCase()))
 			{
 				ocelot.setAgeLock(true);
 			}
-			if(string.toLowerCase().contains(plugin.getConfigHandler().getLanguageString("system", "animal.ocelot.type.CUSTOME_NAME_INVISIBLE").toLowerCase()))
+			if(string.toLowerCase().equalsIgnoreCase(plugin.getConfigHandler().getLanguageString("system", "animal.ocelot.type.CUSTOM_NAME_INVISIBLE").toLowerCase()))
 			{
 				ocelot.setCustomNameVisible(false);
 			}
